@@ -1,0 +1,544 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<h2 id="WelcomeMessage" class="text-center">
+    Base Project App
+    <br />
+    <b>Management System</b>
+</h2>
+
+<div id="Dashboard" style="display:none" class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+
+    <div class="row">
+        <div class="col-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <span class="kt-portlet__head-icon kt-hidden">
+                            <i class="la la-gear"></i>
+                        </span>
+                        <h3 class="kt-portlet__head-title">
+                            Portal settings
+                        </h3>
+
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div id="PortalSettingsChart" style="height: 300px;"></div>
+                        </div>
+
+                        <div class="col-3 m-auto">
+
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="kt-badge kt-badge--brand font-weight-bold kt-badge--md kt-badge--rounded" id="TextvariablesNum"></span>
+                                    <span class="font-weight-bold ml-2">Text variables</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--dark font-weight-bold kt-badge--md kt-badge--rounded" id="LookupsNum">25</span>
+                                    <span class="font-weight-bold ml-2">Lookups</span>
+                                </div>
+
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--primary font-weight-bold kt-badge--md kt-badge--rounded" id="CompanylookupsNum"></span>
+                                    <span class="font-weight-bold ml-2">Company lookups</span>
+                                </div>
+
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--danger font-weight-bold kt-badge--md kt-badge--rounded" id="SystemparametersNum"></span>
+                                    <span class="font-weight-bold ml-2">System parameters</span>
+                                </div>
+
+
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--success font-weight-bold kt-badge--md kt-badge--rounded" id="CountriesNum"></span>
+                                    <span class="font-weight-bold ml-2">Countries</span>
+                                </div>
+
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--warning text-white font-weight-bold kt-badge--md kt-badge--rounded" id="KeywordsNum"></span>
+                                    <span class="font-weight-bold ml-2">Keywords</span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <span class="kt-portlet__head-icon kt-hidden">
+                            <i class="la la-gear"></i>
+                        </span>
+                        <h3 class="kt-portlet__head-title">
+                            Web content
+                        </h3>
+
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div id="WebContentChart" style="height: 300px;"></div>
+                        </div>
+
+                        <div class="col-3 m-auto">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="kt-badge kt-badge--brand font-weight-bold kt-badge--md kt-badge--rounded" id="MediaFilesNum"></span>
+                                    <span class="font-weight-bold ml-2">Media files</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--dark font-weight-bold kt-badge--md kt-badge--rounded" id="SlidersNum"></span>
+                                    <span class="font-weight-bold ml-2">Sliders</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--primary font-weight-bold kt-badge--md kt-badge--rounded" id="ContentRecordsNum"></span>
+                                    <span class="font-weight-bold ml-2">Content records</span>
+                                </div>
+
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--danger font-weight-bold kt-badge--md kt-badge--rounded" id="AlbumsNum"></span>
+                                    <span class="font-weight-bold ml-2">Albums</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--success font-weight-bold kt-badge--md kt-badge--rounded" id="MenusNum"></span>
+                                    <span class="font-weight-bold ml-2">Menus</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--warning text-white font-weight-bold kt-badge--md kt-badge--rounded" id="PublicationsNum"></span>
+                                    <span class="font-weight-bold ml-2">Publications</span>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <span class="kt-portlet__head-icon kt-hidden">
+                            <i class="la la-gear"></i>
+                        </span>
+                        <h3 class="kt-portlet__head-title">
+                            Contact info
+                        </h3>
+
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div id="ContactInfoChart" style="height: 300px;"></div>
+                        </div>
+
+                        <div class="col-3 m-auto">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="kt-badge kt-badge--brand font-weight-bold kt-badge--md kt-badge--rounded" id="InquiriesNum"></span>
+                                    <span class="font-weight-bold ml-2">Inquiries</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--dark font-weight-bold kt-badge--md kt-badge--rounded" id="FAQsNum"></span>
+                                    <span class="font-weight-bold ml-2">FAQs</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--primary font-weight-bold kt-badge--md kt-badge--rounded" id="AuthorsNum"></span>
+                                    <span class="font-weight-bold ml-2">Authors</span>
+                                </div>
+
+
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <span class="kt-portlet__head-icon kt-hidden">
+                            <i class="la la-gear"></i>
+                        </span>
+                        <h3 class="kt-portlet__head-title">
+                            Others
+                        </h3>
+
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div id="OthersChart" style="height: 300px;"></div>
+                        </div>
+
+                        <div class="col-3 m-auto">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="kt-badge kt-badge--brand font-weight-bold kt-badge--md kt-badge--rounded" id="TeamMembersNum">10</span>
+                                    <span class="font-weight-bold ml-2">Team members</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--dark font-weight-bold kt-badge--md kt-badge--rounded" id="PartnersDonorsNum"></span>
+                                    <span class="font-weight-bold ml-2">Partners donors</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <span class="kt-portlet__head-icon kt-hidden">
+                            <i class="la la-gear"></i>
+                        </span>
+                        <h3 class="kt-portlet__head-title">
+                            Security
+                        </h3>
+
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div id="SecurityChart" style="height: 300px;"></div>
+                        </div>
+
+
+                        <div class="col-3 m-auto">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="kt-badge kt-badge--brand font-weight-bold kt-badge--md kt-badge--rounded" id="UsersNum">10</span>
+                                    <span class="font-weight-bold ml-2">Users</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--dark font-weight-bold kt-badge--md kt-badge--rounded" id="RolesNum"></span>
+                                    <span class="font-weight-bold ml-2">Roles</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="kt-portlet">
+                <div class="kt-portlet__head">
+                    <div class="kt-portlet__head-label">
+                        <span class="kt-portlet__head-icon kt-hidden">
+                            <i class="la la-gear"></i>
+                        </span>
+                        <h3 class="kt-portlet__head-title">
+                            Careers
+                        </h3>
+
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <div class="row">
+                        <div class="col-6">
+                            <div id="CareersChart" style="height: 300px;"></div>
+                        </div>
+
+                        <div class="col-3 m-auto">
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <span class="kt-badge kt-badge--brand font-weight-bold kt-badge--md kt-badge--rounded" id="CareersNum">10</span>
+                                    <span class="font-weight-bold ml-2">Careers</span>
+                                </div>
+
+                                <div class="col-12 mt-3">
+                                    <span class="kt-badge kt-badge--dark font-weight-bold kt-badge--md kt-badge--rounded" id="ApplicantsNum"></span>
+                                    <span class="font-weight-bold ml-2">Applicants</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+@section Scripts
+{
+<script src="~/assets/vendors/custom/flot/flot.bundle.js" type="text/javascript"></script>
+
+<script>
+
+     var Data = '';
+     //@Html.Raw(Model.DataObj);
+     var Valid = false;
+
+     if(Data != '')
+     {
+             Valid = Data.Activated == 1 ? true : false;
+             var portalSettings = {
+                    "TextVariables" : Data.Textvariables , "Lookups" : Data.Lookups , "CompanyLookups" : Data.Companylookups
+                    , "SystemParameters": Data.Systemparameters , "Countries":Data.Countries , "Keywords": Data.Keywords
+                }
+             var contactInfo = {"Inquiries" : Data.Inquiries , "FAQs" : Data.FAQs , "Authors" : Data.Authors }
+             var Others = {"TeamMembers" : Data.TeamMembers ,"PartnersDonors" : Data.PartnersDonors }
+             var Security = {"Users": Data.Users ,"Roles": Data.Roles }
+             var Careers = {"Careers" : Data.Careers , "Applicants" : Data.Applicants }
+             var WebContent = {
+                             "MediaFiles" : Data.MediaFiles , "Sliders" : Data.Sliders , "ContentRecords" : Data.ContentRecords ,
+                             "Albums" : Data.Albums , "Menus": Data.Menus , "Publications" : Data.Publications
+                             }
+       }
+
+    $(document).ready(function(){
+            
+         
+            if(Valid) 
+            {   
+                //$('#Dashboard').show();
+                //$('#WelcomeMessage').hide();
+                DashboardCharts.init();  
+            }
+            else
+            {
+                $('#WelcomeMessage').show();
+                $('#Dashboard').hide();
+            }
+
+            
+
+    });
+
+
+     var DashboardCharts = function() {
+
+        $('#TextvariablesNum').html(portalSettings.TextVariables);
+        $('#LookupsNum').html(portalSettings.Lookups);
+        $('#CompanylookupsNum').html(portalSettings.CompanyLookups);
+        $('#SystemparametersNum').html(portalSettings.SystemParameters);
+        $('#CountriesNum').html(portalSettings.Countries);
+        $('#KeywordsNum').html(portalSettings.Keywords);
+
+
+        $('#MediaFilesNum').html(WebContent.MediaFiles);
+        $('#SlidersNum').html(WebContent.Sliders);
+        $('#ContentRecordsNum').html(WebContent.ContentRecords);
+        $('#AlbumsNum').html(WebContent.Albums);
+        $('#MenusNum').html(WebContent.Menus);
+        $('#PublicationsNum').html(WebContent.Publications);
+
+        $('#FAQsNum').html(contactInfo.FAQs);
+        $('#InquiriesNum').html(contactInfo.Inquiries);
+        $('#AuthorsNum').html(contactInfo.Authors);
+
+        $('#TeamMembersNum').html(Others.TeamMembers);
+        $('#PartnersDonorsNum').html(Others.PartnersDonors);
+
+        $('#RolesNum').html(Security.Roles);
+        $('#UsersNum').html(Security.Users);
+
+        $('#CareersNum').html(Careers.Careers);
+        $('#ApplicantsNum').html(Careers.Applicants);
+
+
+        var PortalSettingsChartObj = function() {
+            var PortalSettingsChartData = [
+                {label: "Text variables", data: portalSettings.TextVariables, color:  KTApp.getStateColor("brand")},
+                {label: "Lookups", data: portalSettings.Lookups, color:  KTApp.getStateColor("dark")},
+                {label: "Company lookups", data: portalSettings.CompanyLookups, color:  KTApp.getStateColor("primary")},
+                {label: "System parameters", data: portalSettings.SystemParameters, color:  KTApp.getStateColor("danger")},
+                {label: "Countries", data: portalSettings.Countries, color:  KTApp.getStateColor("success")},
+                {label: "Keywords", data: portalSettings.Keywords, color:  KTApp.getStateColor("warning")}
+            ];
+
+            $.plot($("#PortalSettingsChart"), PortalSettingsChartData, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+         var WebContentChartObj = function() {
+            var WebContentChartData = [
+                {label: "Media files", data: WebContent.MediaFiles, color:  KTApp.getStateColor("brand")},
+                {label: "Sliders", data: WebContent.Sliders, color:  KTApp.getStateColor("dark")},
+                {label: "Content records", data: WebContent.ContentRecords, color:  KTApp.getStateColor("primary")},
+                {label: "Albums", data: WebContent.Albums, color:  KTApp.getStateColor("danger")},
+                {label: "Menus", data: WebContent.Menus, color:  KTApp.getStateColor("success")},
+                {label: "Publications", data: WebContent.Publications, color:  KTApp.getStateColor("warning")}
+            ];
+
+            $.plot($("#WebContentChart"), WebContentChartData, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+
+        var ContactInfoChartObj = function() {
+            var ContactInfoChartData = [
+                {label: "Inquiries", data: contactInfo.Inquiries, color:  KTApp.getStateColor("brand")},
+                {label: "FAQs", data: contactInfo.FAQs, color:  KTApp.getStateColor("dark")},
+                {label: "Authors", data: contactInfo.Authors, color:  KTApp.getStateColor("primary")},
+            ];
+
+            $.plot($("#ContactInfoChart"), ContactInfoChartData, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+          var OthersChartObj = function() {
+            var OthersChartData = [
+                {label: "Team members", data: Others.TeamMembers, color:  KTApp.getStateColor("brand")},
+                {label: "Partners donors", data: Others.PartnersDonors, color:  KTApp.getStateColor("dark")}
+            ];
+
+            $.plot($("#OthersChart"), OthersChartData, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+
+            var SecurityChartObj = function() {
+            var SecurityChartData = [
+                {label: "Roles", data: Security.Roles, color:  KTApp.getStateColor("brand")},
+                {label: "Users", data: Security.Users, color:  KTApp.getStateColor("dark")}
+            ];
+
+            $.plot($("#SecurityChart"), SecurityChartData, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+
+         var CareersChartObj = function() {
+            var CareersChartData = [
+                {label: "Careers", data: Careers.Careers, color:  KTApp.getStateColor("brand")},
+                {label: "Applicants", data: Careers.Applicants, color:  KTApp.getStateColor("dark")}
+            ];
+
+            $.plot($("#CareersChart"), CareersChartData, {
+                series: {
+                    pie: {
+                        show: true
+                    }
+                },
+                legend: {
+                    show: false
+                }
+            });
+        }
+
+
+        return {
+            init: function() {
+                PortalSettingsChartObj();
+                ContactInfoChartObj();
+                WebContentChartObj();
+                SecurityChartObj();
+                OthersChartObj();
+                CareersChartObj();
+            }
+        };
+
+    }();
+
+
+
+</script>
+
+}

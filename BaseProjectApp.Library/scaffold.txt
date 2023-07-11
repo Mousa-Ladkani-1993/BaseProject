@@ -1,0 +1,7 @@
+script with description => 
+Scaffold-DbContext "Server=(Server name);Database=(Database name);Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir (Folder name) -forceScaffold-DbContext "Server=(Server name);Database=(Database name);Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir (Folder name) -force
+
+
+excutive script => 
+Scaffold-DbContext "Server=COMPUTER\MSSQLSERVER01;Database=BaseProjectDB;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir DbModels -force
+

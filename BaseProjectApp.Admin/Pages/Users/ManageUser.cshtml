@@ -1,0 +1,629 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.Users.ManageUserModel
+
+@{
+    ViewData["Title"] = "Manage Users";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<form method="post">
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid" id="divEditMode">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon-list"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        User Details
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <div class="tab-pane active" role="tabpanel" style="width: 100%">
+                    <div class="accordion  accordion-toggle-arrow" id="accordionExample1">
+                    </div>
+                </div>
+                <div class="kt-portlet__body kt-portlet__body--fit">
+                    <div class="form-group" style="display: none">
+                        <label class="col-sm-2 col-form-label">Id</label>
+                        <div class="col-sm-6">
+                            <label asp-for="IdentityUser.Id" class="control-label"></label>
+                            <input asp-for="IdentityUser.Id" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="display: none">
+                        <label class="col-sm-2 col-form-label">Mode</label>
+                        <div class="col-sm-6">
+                            <input asp-for="Mode" class="form-control" />
+                        </div>
+                    </div>
+
+                    <!--<div class="form-group">
+                        <label class="col-sm-3 control-label">Username</label>
+                        <div class="col-sm-6">-->
+                    @* <input type="text" asp-for="UserName" class="form-control" readonly /> *@
+                    <!--<input type="text" asp-for="UserName" id="username" class="form-control" />
+                        </div>
+                        <div class="col-sm-3">
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                    </div>-->
+                    <!--<div class="form-group">
+                        <label class="col-sm-3 control-label">Full Name</label>
+                        <div class="col-sm-6">-->
+                    @* <input type="text" asp-for="FullName" class="form-control" readonly /> *@
+                    <!--<input type="text" asp-for="FullName" class="form-control"  />
+                        </div>
+                        <div class="col-sm-3">
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+                    </div>-->
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Full Name</label>
+                        <div class="col-sm-6">
+                            <input type="text" asp-for="FullName" id="FullName" maxlength="100"
+                            class="form-control" />
+                        </div> 
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Email</label>
+                        <div class="col-sm-6">
+                            <input type="text" asp-for="Email" id="email" class="form-control" />
+                        </div>
+                        <div class="col-sm-3">
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="oldPasswordField">
+                        <label class="col-sm-3 control-label" id="lblOldPass">
+                            Old Password
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="password" asp-for="IdentityUser.PasswordHash" class="form-control" disabled="disabled" />
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="newPasswordField" style="display: none;">
+                        <label class="col-sm-3 control-label" id="lblNewPass">
+                            New Password
+                        </label>
+                        <div class="col-sm-6">
+                            <input type="password" asp-for="NewPassword" class="form-control" />
+                        </div>
+                        <div class="col-sm-3">
+                            <span asp-validation-for="NewPassword" class="text-danger"></span>
+                            <span class="text-danger">@ViewBag.PasswordCheck</span> 
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">Mobile Number</label>
+                        <div class="col-sm-6">
+                            <input type="text" asp-for="IdentityUser.PhoneNumber" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 col-form-label">Roles</label>
+                        <div class="col-sm-6">
+                            <textarea onchange="onChangeRoles()" type="text" asp-for="rolesList" id="rolesList" placeholder="Select Roles" class="form-control" style="height: 100px;"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+
+                        <div class="row">
+                            <label class="col-3 col-form-label">Permissions</label>
+                            <div class="col-9 pt-4">
+                                <div class="kt-checkbox-inline" style="padding-left: 9rem;">
+                                    <label class="kt-checkbox kt-checkbox--bold kt-checkbox--dark mb-4 ml-5" cheched="">
+                                        <input type="checkbox" onclick="ApplySelectAll()" id="Select">
+                                        <b id="Selectlbl" style="font-weight:500"></b>
+                                        <span></span>
+                                    </label>
+                                </div>
+                                <span class="form-text text-muted"></span>
+                            </div>
+                        </div>
+
+
+                        <input type="hidden" value="null" asp-for="RolesPermissions" id="rolesPermissions">
+
+                        <div class="col-sm-6">
+                            <table class="table table-bordered">
+                                <thead>
+                                <th>Entity</th>
+                                <th>View</th>
+                                <th>Add</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                                </thead>
+
+                                <tbody id="permissions_table"></tbody>
+
+                            </table>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="uploadImage">
+                        <label class="col-sm-2 col-form-label">Image</label>
+                        <div class="col-sm-6">
+                            <div class="form-group row" style="display: none">
+                                <label class="col-lg-3 col-form-label">Id</label>
+                                <div class="col-lg-8">
+                                    <input type="text" asp-for="txtMediaId" id="txtMediaId" class="form-control" />
+                                </div>
+
+                                <input type="text" asp-for="UserProfileImage" id="UserProfileImage" class="form-control" />
+                                <input type="text" asp-for="UserProfileImageUrl" id="UserProfileImageUrl" class="form-control" />
+                            </div>
+                            <div class="kt-dropzone dropzone" action="~" id="mediaFileUploadDZ">
+                                <div class="kt-dropzone__msg dz-message needsclick">
+                                    <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+                                </div>
+                            </div>
+
+                            <div  id="imageEdit" style="padding-top: 3%; display: none;">
+                          
+
+                                    <div class="row">
+
+                                        <div class="col-6">
+                                            <img src="" id="imageSrc" style="width:200px; margin-top:40px" />
+                                        </div>
+                                        <div class="col-6" style=" display: flex; align-items: center;">
+                                            <a href="#" id="changeImageId" class="btn btn-primary btn-sm" onclick="changeImage(event)" style="font-weight: bold">Change Image</a>
+                                        </div>
+
+                                
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-2 mt-3">
+                            <a href="#" id="cancelImageId" class="btn btn-primary btn-sm" onclick="cancelAddImage(event)" style="display: none;">Cancel</a>
+                        </div>
+                    </div>
+
+                    <div class="kt-portlet__foot" id="divSaveButtons" runat="server" style="padding: 20px 0px 0px 0px !important;">
+                        <div class="kt-form__actions">
+                            <div class="btn-group">
+                                <button type="submit" asp-page-handler="SaveAndContinue" onclick="UpdateUserProfileImageContent()" class="btn btn-primary"><i class="la la-save"></i> Save & Continue</button>
+                            </div>
+                            <div class="btn-group">
+                                <a href="ManageUsers" class="btn btn-outline-hover-danger btn-square">
+                                    <i class="la la-close"></i> Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid" id="divResetMode" style="display: none;">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon-list"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        Reset Password
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body">
+                <div class="tab-pane active" role="tabpanel" style="width: 100%">
+                    <div class="accordion  accordion-toggle-arrow" id="accordionExample1">
+                    </div>
+                </div>
+                <div class="kt-portlet__body kt-portlet__body--fit">
+                    <div class="form-group" style="display: none">
+                        <label class="col-sm-2 col-form-label">Id</label>
+                        <div class="col-sm-6">
+                            <label asp-for="IdentityUser.Id" class="control-label"></label>
+                            <input asp-for="IdentityUser.Id" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @*<label class="col-sm-3 control-label">Username</label>
+                                <div class="col-sm-6">
+                                    <input type="text" asp-for="UserName" class="form-control" readonly />
+                                </div>
+                            </div>*@
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label" id="lblNewPass">
+                                New Password
+                            </label>
+                            <div class="col-sm-6">
+                                <input type="text" asp-for="NewResetPassword" placeholder="Please, Click on Resest" class="form-control" disabled="disabled" />
+                            </div>
+                        </div>
+
+                        <div class="kt-portlet__foot" runat="server" style="padding: 20px 0px 0px 0px !important;">
+                            <div class="kt-form__actions">
+                                <div class="btn-group">
+                                    <button type="submit" asp-page-handler="ResetPassword" class="btn btn-primary"> Reset Password</button>
+                                </div>
+                                <div class="btn-group">
+                                    <a href="ManageUsers" class="btn btn-outline-hover-danger btn-square">
+                                        <i class="la la-close"></i> Cancel
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</form>
+
+@section Scripts{
+
+    <script>
+        var APIUrl = '@ViewData["APIURL"]';
+        var UserId = '@ViewData["UserId"]';
+        var Mode = '@ViewData["Mode"]';
+        var UrlUserId = '@ViewData["UrlUserId"]';
+
+        Dropzone.autoDiscover = false;
+        var toUploadFile = null;
+
+        let permissionsRoles = [];
+
+        $(document).ready(() => {
+            if(UrlUserId != null && UrlUserId.trim() != '') {
+                $('#username').prop('disabled', true);
+                $('#email').prop('disabled', true);
+            }
+        });
+
+        jQuery(document).ready(function () {
+
+            if (Mode == "Edit") {
+                document.getElementById("divEditMode").style.display = "block";
+                document.getElementById("divResetMode").style.display = "none";
+                document.getElementById("oldPasswordField").style.display = "";
+                document.getElementById("newPasswordField").style.display = "none";
+            }
+            else if (Mode == "Reset") {
+                document.getElementById("divEditMode").style.display = "none";
+                document.getElementById("divResetMode").style.display = "block";
+                document.getElementById("oldPasswordField").style.display = "";
+                document.getElementById("newPasswordField").style.display = "none";
+            }
+            else if (Mode == "New") {
+                document.getElementById("oldPasswordField").style.display = "none";
+                document.getElementById("newPasswordField").style.display = "";
+            }
+            else {
+                document.getElementById("newPasswordField").style.display = "";
+            }
+
+            var roles = document.getElementById('rolesList').value;
+            loadDropDownsList(roles);
+
+            $("#mediaFileUploadDZ").dropzone({
+                maxFilesize: MaxUploadedFileSizeMB,
+                autoProcessQueue: false,
+                acceptedFiles: 'image/*',
+                addRemoveLinks: true,
+                maxFiles: 1,
+                accept: function (file, done) {
+                    done();
+                },
+                init: function () {
+                    this.on("addedfile", function () {
+
+                              if (this.files[0].size  < MaxUploadedFileSizeB)
+                            toUploadFile = this.files;  
+                    });
+
+                    this.on("removedfile", function () {
+                        toUploadFile = this.files;
+                        if (toUploadFile != null && toUploadFile.length == 0)
+                            toUploadFile = null;
+                    });
+
+                    this.on("maxfilesexceeded", function (file) {
+                        this.removeAllFiles();
+                        this.addFile(file);
+                    });
+                }
+            });
+
+            if(UrlUserId != null && UrlUserId.trim() != '') {
+                _getMediaId();
+            }
+
+
+        });
+
+
+        function ShowAllSelect() {
+
+            let CheckExist = false;
+
+
+            $('.add_permission').each(function (i, obj) {
+
+                if (CheckExist)
+                    return;
+
+                CheckExist = $(this).prop('checked');
+
+            });
+
+            $('.edit_permission').each(function (i, obj) {
+
+                if (CheckExist)
+                    return;
+
+                CheckExist = $(this).prop('checked');
+            });
+
+            $('.delete_permission').each(function (i, obj) {
+
+                if (CheckExist)
+                    return;
+
+                CheckExist = $(this).prop('checked');
+            });
+
+            if (CheckExist) {
+                $('#Selectlbl').html('Deselect all');
+            }
+            else {
+                $('#Selectlbl').html('Select all');
+            }
+
+        }
+        function loadDropDownsList(roles) {
+
+            $.ajax({
+                type: "GET",
+                url: "./ManageUser?handler=LoadRolesList",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                data: "{}",
+                success: function (result) {
+
+                    
+
+                    var countriesListData = result;
+
+                    var SampleJSONData2 = [
+                        {
+                            id: 1,
+                            title: 'Select All',
+                            subs: countriesListData
+                        }
+                    ];
+
+                    comboTree1 = $('#rolesList').comboTree({
+                        source: SampleJSONData2,
+                        isMultiple: true,
+                        cascadeSelect: true,
+                        collapse: false
+                    });
+
+                    //Load Roles
+                    if (roles != "") {
+                        var arr = roles.split(' ');
+                        comboTree1.setSelection(arr);
+                    }
+
+                    setPermissions();
+                },
+                error: function (result) {
+                    alert('error when get drop downs list');
+                }
+            });
+
+        }
+
+        function UpdateUserProfileImageContent() {
+
+            const rolesPermissions = getPermissions();
+
+            $('#rolesPermissions').val(JSON.stringify(rolesPermissions));
+
+
+            if (toUploadFile == null)
+                return false;
+            else {
+                var image = toUploadFile[0].name;
+                var dataURL = toUploadFile[0].dataURL;
+                $('#UserProfileImage').val(image);
+                $('#UserProfileImageUrl').val(dataURL);
+            }
+
+            return true;
+        }
+
+        function _getMediaId() {
+
+            var url = APIUrl + 'Api/MediaFile/GetUserProfileImageById?UserId=' + UrlUserId;
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "text",
+                success: function (result) {
+                    if (result != null) {
+                        var json = $.parseJSON(result);
+
+                        document.getElementById("mediaFileUploadDZ").style.display = "none";
+                        document.getElementById("imageEdit").style.display = "";
+
+                        $('#txtMediaId').val(json.Id);
+                        $('#UserProfileImage').val(json.FileName);
+                        $("#imageSrc").attr("src", json.FilePath);
+                    }
+                },
+            });
+
+        }
+
+        function changeImage(e) {
+            e.preventDefault();
+
+            document.getElementById("mediaFileUploadDZ").style.display = "";
+            document.getElementById("imageEdit").style.display = "none";
+
+            document.getElementById("changeImageId").style.display = "none";
+            document.getElementById("cancelImageId").style.display = "";
+
+            Dropzone.forElement('#mediaFileUploadDZ').removeAllFiles(true);
+            toUploadFile = null;
+
+            return false;
+        }
+
+        function cancelAddImage(e) {
+            e.preventDefault();
+
+            document.getElementById("mediaFileUploadDZ").style.display = "none";
+            document.getElementById("imageEdit").style.display = "";
+
+            document.getElementById("changeImageId").style.display = "";
+            document.getElementById("cancelImageId").style.display = "none";
+
+            Dropzone.forElement('#mediaFileUploadDZ').removeAllFiles(true);
+            toUploadFile = null;
+
+            return false;
+        }
+
+        function onChangeRoles() {
+
+            const roles = $('#rolesList').val() != null ? $('#rolesList').val().split(',').map(r => r.trim()) : [];
+
+            const rolesSet = new Set(roles);
+            const permissionsSet = new Set(permissionsRoles);
+
+            // keep rolesSet intersect permissionsSet
+            // add rolesSet difference permissionsSet
+            [...rolesSet]
+            .filter(role => !permissionsSet.has(role))
+            .filter(role => role != null && role.trim() != "")
+            .forEach((role) => addToPermissionsTable(role));
+            // remove permissionsSet difference rolesSet
+            [...permissionsSet]
+            .filter(role => !rolesSet.has(role))
+            .filter(role => role != null && role.trim() != "")
+            .forEach((role) => removeFromPermissionsTable(role));
+
+            permissionsRoles = roles;
+
+        }
+
+        function convertRoleName(roleName) {
+            return roleName.split(' ').join('-');
+        }
+
+        function addToPermissionsTable(roleName) {
+
+            const htmlStr = `
+                <tr id="${convertRoleName(roleName)}" class="permission_role">
+                    <td class="">${roleName}</td>
+                    <td class=""><input type="checkbox" class="view_permission kt-checkbox" checked disabled=true></td>
+                    <td class=""><input type="checkbox" class="add_permission kt-checkbox"></td>
+                    <td class=""><input type="checkbox" class="edit_permission kt-checkbox"></td>
+                    <td class=""><input type="checkbox" class="delete_permission kt-checkbox"></td>
+                </tr>
+            `;
+
+            $('#permissions_table').append(htmlStr);
+        }
+
+        function removeFromPermissionsTable(roleName) {
+            $(`#${convertRoleName(roleName.trim())}`).remove();
+        }
+
+        function getPermissions() {
+
+            const roles = $('#rolesList').val() != null ? $('#rolesList').val().split(',').map(r => r.trim()) : [];
+            const rolesSet = new Set(roles);
+
+            let permissions = {};
+
+            rolesSet.forEach(r => {
+                permissions[r] = {
+                    view: true,
+                    add: $(`#${convertRoleName(r)} .add_permission:checked`).val() ? true : false,
+                    edit: $(`#${convertRoleName(r)} .edit_permission:checked`).val() ? true : false,
+                    delete: $(`#${convertRoleName(r)} .delete_permission:checked`).val() ? true : false,
+                }
+            });
+
+            return permissions;
+        }
+
+        function ApplySelectAll() {
+
+            
+
+            let selectAll = $('#Select').prop('checked');
+
+            $('#Select').hide();
+            $('#DeSelect').show();
+
+            if (selectAll) {
+                $('.add_permission').prop('checked', true);
+                $('.edit_permission').prop('checked', true);
+                $('.delete_permission').prop('checked', true);
+
+                $('#Selectlbl').html('Deselect all');
+
+            }
+            else {
+
+                $('.add_permission').prop('checked', false);
+                $('.edit_permission').prop('checked', false);
+                $('.delete_permission').prop('checked', false);
+
+                $('#Selectlbl').html('Select all');
+
+            }
+        }
+
+
+        async function setPermissions() {
+            var userPermissions = await getUserPermissions_api(UrlUserId);
+
+            if(userPermissions == null) return;
+
+            const roles = $('#rolesList').val() != null ? $('#rolesList').val().split(',').map(r => r.trim()) : [];
+            const rolesSet = new Set(roles);
+
+            rolesSet.forEach(r => {
+                const userPermission = userPermissions.find(x => x.RoleName == r);
+
+                $(`#${convertRoleName(r)} .view_permission`).prop('checked', true);
+                $(`#${convertRoleName(r)} .add_permission`).prop('checked', userPermission.Add);
+                $(`#${convertRoleName(r)} .edit_permission`).prop('checked', userPermission.Edit);
+                $(`#${convertRoleName(r)} .delete_permission`).prop('checked', userPermission.Delete);
+            });
+
+            ShowAllSelect();
+        }
+
+
+
+    </script>
+
+}

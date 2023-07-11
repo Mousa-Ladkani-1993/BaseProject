@@ -1,0 +1,627 @@
+﻿@model Microsoft.AspNetCore.Html.HtmlString
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration _configuration
+@{
+    ViewData["APIURL"] = _configuration["AppSettings:APIURL"];
+}
+
+
+<style>
+    .fit-img {
+        max-width: 200px;
+        max-height: 200px;
+        width: auto;
+        height: auto;
+    }
+</style>
+
+<div class="modal fade media-files-modal" tabindex="-1" role="dialog" aria-hidden="true" style="z-index:100000">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            
+            <div class="modal-header">
+                <h5 class="modal-title">File / Image Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Type</label>
+                        <div class="col-lg-8">
+                            <select class="form-control kt-select2-NoSearch media-type" Width="100%">
+                                <option value="1">Image</option>
+                                <option value="2">Video</option>
+                                <option value="3">File</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group row" id="LanguageSelectDiv">
+                        <label class="col-lg-3 col-form-label">Language</label>
+                        <div class="col-lg-8">
+                            <select class="form-control kt-select2-NoSearch" id="LanguageSelect" Width="100%">
+                                <option value="0">--</option>
+                                <option value="en">English</option>
+                                <option value="ar">Arabic</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group row chk-main-div mb-2">
+                        <label class="col-lg-3 col-form-label">Main Image</label>
+                        <div class="col-lg-8" style="margin-top: 10px">
+                            <input type="checkbox" class="chk-main" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row orientation-div mb-2" style="display:none">
+                        <label class="col-3 col-form-label">Orientation</label>
+                        <div class="col-lg-8">
+                            <div class="kt-radio-inline">
+                                <label class="kt-radio">
+                                    <input class="chk-horizontal" type="radio" name="orientation"> Horizontal
+                                    <span></span>
+                                </label>
+                                <label class="kt-radio">
+                                    <input class="chk-vertical" type="radio" name="orientation"> Vertical
+                                    <span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+ 
+
+                    <div class="form-group row chk-icon-div mb-2">
+                        <label class="col-lg-3 col-form-label">Is Icon</label>
+                        <div class="col-lg-8" style="margin-top: 10px">
+                            <input type="checkbox" class="chk-icon" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Caption</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control caption" style="width: 100%;" required />
+                            <span class="caption-validation" style="color: red; display: none;">caption is required</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Display Order</label>
+                        <div class="col-lg-8">
+                            <input type="number" class="form-control display-order" style="width: 100%;" min="0" step="1" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row video-link-div" style="display: none;">
+                        <label class="col-lg-3 col-form-label">Video Link</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control video-link" style="width: 100%;" required />
+                            <span class="video-link-validation" style="color: red; display: none;">video link is required</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row files-section">
+                        <label class="col-lg-3 col-form-label">Files</label>
+                        <div class="col-lg-8">
+
+                            <div style="text-align: center" class="cancel-btn-div">
+                                <a class="cancel-change-btn" href="#" style="">Cancel</a>
+                            </div>
+
+                            <ul class="nav nav-tabs  nav-tabs-line tab-list" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active upload-tab-btn" data-toggle="tab" href=".upload-tab" role="tab">Upload Files</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link select-tab-btn" data-toggle="tab" href=".select-tab" role="tab">Select Files</a>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content tabs">
+
+                                <div class="tab-pane active upload-tab" role="tabpanel">
+                                    <div class="kt-dropzone dropzone files-dz" action="~">
+                                        <div class="kt-dropzone__msg dz-message needsclick">
+                                            <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane select-tab" role="tabpanel">
+                                    <select class="kt-select2 imgs-ddl" style="width: 100%; display: inline-block">
+                                    </select>
+                                </div>
+
+                                <span class="file-validation" style="color: red; display: none;">Please Upload at least one file or select one</span>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group row img-section" style="display: none;">
+                        <label class="col-lg-3 col-form-label">Image</label>
+                        <div class="col-lg-8">
+                            <div style="text-align:center">
+                                <a href="#" class="change-img-btn" style="font-weight: bold;">Change Image</a>
+                            </div>
+
+                            <img src="" alt="Media Image" class="media-img" style="max-width: 100%">
+                        </div>
+                    </div>
+
+                    <div class="form-group row file-section" style="display: none;">
+                        <label class="col-lg-3 col-form-label">File</label>
+                        <div class="col-lg-8">
+                            <div style="text-align:center">
+                                <a href="#" class="change-file-btn" style="font-weight: bold;">Change File</a>
+                            </div>
+
+                            <a href="#" class="view-file-btn" target="_blank">View File</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary add-btn" data-dismiss="modal">Save File</button>
+                    <button type="button" class="btn btn-primary edit-btn" data-dismiss="modal">Update File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Dropzone.autoDiscover = false;
+    
+    function render(data) {
+
+        class MediaFilesForm {
+
+            mediaPath = null;
+            imgsDict = {};
+
+            constructor(pid, recordId, type, mediaId, apiUrl, language) {
+
+                if (language == true)
+                    $('#LanguageSelectDiv').show();
+                else
+                    $('#LanguageSelectDiv').hide();
+
+                this.pid = pid;
+                this.recordId = recordId;
+                this.type = type;
+                this.mediaId = mediaId;
+                this.apiUrl = apiUrl;
+                //this.language = language;
+                
+
+                this.files = [];
+
+
+                this.addDocReadyCb(this.initDropzone.bind(this));
+                this.addDocReadyCb(this.buildImagesDdl.bind(this));
+
+                if(this.mediaId != null && this.mediaId != 0) {
+                    this.addDocReadyCb(this.buildForm.bind(this), true);
+                    $(`#${this.pid} .add-btn`).hide();
+                }
+                else {
+                    $(`#${this.pid} .edit-btn`).hide();
+                    $(`#${this.pid} .cancel-btn-div`).hide();
+                }
+
+                // this.addDocReadyCb(console.log, false, ['the hell of async await ...']);
+
+                this.setupListener();
+            }
+
+
+            addDocReadyCb(fn, isAsync=false, args=[]) {
+                
+                !isAsync ? $(document).ready(() => fn(...args)) : $(document).ready(async () => await fn(...args));
+            }
+
+            addListenerCb(selector, eventName, fn, args=[]) {
+                this.addDocReadyCb(() => $(`#${this.pid} ${selector}`).on(eventName, (e) => fn(e, ...args)));
+            }
+
+            setupListener() {
+                this.addListenerCb('.chk-horizontal', 'change', this.onCheckIsHorizontal.bind(this));
+                this.addListenerCb('.chk-vertical', 'change', this.onCheckIsVertical.bind(this));
+                this.addListenerCb('.add-btn', 'click', this.onUpload.bind(this));
+                this.addListenerCb('.edit-btn', 'click', this.onEdit.bind(this));
+                this.addListenerCb('.change-img-btn', 'click', this.onChangeImg.bind(this));
+                this.addListenerCb('.change-file-btn', 'click', this.onChangeFile.bind(this));
+                this.addListenerCb('.cancel-change-btn', 'click', this.onCancelImgChange.bind(this));
+                this.addListenerCb('.media-type', 'change', this.onChangeMediaType.bind(this));
+                this.addListenerCb('.upload-tab-btn', 'click', this.onClickUploadTab.bind(this));
+                this.addListenerCb('.select-tab-btn', 'click', this.onClickSelectTab.bind(this));
+                
+            }
+
+            initDropzone(acceptedFiles = '.') {
+                acceptedFiles = 'image/*,application/pdf,.doc,.docx,.xls,.xlsx,.csv,.tsv,.ppt,.pptx,.mp4,.mkv,.avi';
+
+                
+                const onAddFiles = (files) => this.files = files;
+                
+                $(`#${this.pid} .files-dz`).dropzone({
+                    autoProcessQueue: false,
+                    acceptedFiles: acceptedFiles,
+                    init: function() {
+                        this.on('addedfiles', function(files) { onAddFiles(this.files) });
+                    },
+                });
+            }
+
+            onCheckIsHorizontal() {
+                $(`#${this.pid} .chk-vertical`).prop('checked', false);
+            }
+
+            onCheckIsVertical() {
+                $(`#${this.pid} .chk-horizontal`).prop('checked', false);
+            }
+
+            async onUpload(e) {
+
+                if(this.validateForm() == false) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+
+                const data = await this.getMediaFilesFormData();
+
+                this.upload(data);
+
+            }
+
+            async onEdit(e) {
+                
+                if(this.validateForm() == false) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return;
+                }
+                const data = await this.getMediaFilesFormData();
+                if(data.data.getAll('files').length == 0) {
+                    const file = await this.getImage(this.mediaPath).catch((e) => {alert(e.message)});
+                    data.data.append('files', file);
+                }
+
+                this.upload(data);
+            }
+
+            upload(data) {
+
+                const queryParams = Object.keys(data).filter(k => k != 'data').map(k => `${k}=${data[k]}`).join('&');
+
+                $.ajax({
+                    url: `${this.apiUrl}Api/MediaFile/SaveFile?${queryParams}`,
+                    type: "POST",
+                    enctype: 'multipart/form-data',
+                    data: data.data,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: (result) => {
+                        AlertSwalSucceeded('File Saved Successfully');
+                        window.dispatchEvent(new CustomEvent(`${this.pid}_save-done`, {detail: {success: true} } ));
+                    },
+                    error: (error) => {
+                        AlertSwalError('File Save Failed');
+                        window.dispatchEvent(new CustomEvent(`${this.pid}_save-done`, {detail: {success: false} } ));
+                        console.log(error);
+                    },
+
+
+                });
+            }
+
+            async getMediaFilesFormData() {
+                const isHorizontal = $(`#${this.pid} .chk-horizontal:checked`).val();
+                const isVertical = $(`#${this.pid} .chk-vertical:checked`).val();
+
+                const data = new FormData();
+
+                this.files.forEach(f => data.append('files', f));
+
+                if(this.mediaId > 0 && $(`#${this.pid} .imgs-ddl`).val() != null) {
+                    const fileId = $(`#${this.pid} .imgs-ddl`).val();
+                    const filePath = $(`#${this.pid} .imgs-ddl`).select2('data').find(x => x.id == fileId).filePath;
+                    const file = await this.getImage(filePath).catch((e) => {alert(e.message)});
+                    data.append('files', file);
+                }
+
+                
+
+                return {
+                    mediaType: $(`#${this.pid} .media-type`).val(),
+                    mainImage: $(`#${this.pid} .chk-main:checked`).val() ? true : false,
+                    isHorizontal: isHorizontal ? true : (isVertical ? false : ''),
+                    isIcon: $(`#${this.pid} .chk-icon:checked`).val() ? true: false,
+                    caption: $(`#${this.pid} .caption`).val(),
+                    displayOrder: $(`#${this.pid} .display-order`).val(),
+                    youTube: $(`#${this.pid} .video-link`).val(),
+                    duplicateIds: this.mediaId > 0 ? '' : $(`#${this.pid} .imgs-ddl`).val().join(','),
+                    data: data,
+
+                    mediaId: this.mediaId,
+                    recordId: this.recordId,
+                    LanguageId: $('#LanguageSelect').val(),
+                    type: this.type
+                }
+
+            }
+
+            setMediaFilesFormData(data) {
+                $(`#${this.pid} .media-type`).val(data.TypeId).trigger('change');
+                $(`#${this.pid} .media-type`).prop('disabled', true);
+
+
+                $(`#${this.pid} .chk-main`).prop('checked', data.MainImage);
+
+                $(`#${this.pid} .chk-icon`).prop('checked', data.IsIcon);
+
+                $(`#${this.pid} .chk-horizontal`).prop('checked', data.IsHorizontal == true ? true : false);
+                $(`#${this.pid} .chk-vertical`).prop('checked', data.IsHorizontal == false ? true : false);
+                
+                $(`#${this.pid} .caption`).val(data.CaptionEn);
+                $(`#${this.pid} .display-order`).val(data.DisplayOrder);
+                $(`#${this.pid} .video-link`).val(data.YouTubePath);
+            }
+
+            showAll() {
+                $(`#${this.pid} .chk-main-div`).show();
+                // $(`#${this.pid} .chk-horizontal-div`).show();
+                // $(`#${this.pid} .chk-vertical-div`).show();
+                $(`#${this.pid} .orientation-div`).hide();
+                $(`#${this.pid} .chk-icon-div`).show();
+                $(`#${this.pid} .video-link-div`).show();
+            }
+
+            onChangeMediaType() {
+                const typeId = $(`#${this.pid} .media-type`).val();
+                this.showAll();
+
+                const multiple = this.mediaId > 0 ? false: true;
+                this.buildImagesDdl(typeId, multiple);
+                switch (typeId) {
+                    
+                    case '1':
+                        $(`#${this.pid} .video-link-div`).hide();
+                        break
+                        
+                    case '2':
+                        $(`#${this.pid} .chk-main-div`).hide();
+                        // $(`#${this.pid} .chk-horizontal-div`).hide();
+                        // $(`#${this.pid} .chk-vertical-div`).hide();
+                        $(`#${this.pid} .orientation-div`).hide();
+                        $(`#${this.pid} .chk-icon-div`).hide();
+                        //$(`#${this.pid} .files-dz`).prop('accept','video/*');
+                        break;
+
+                    case '3':
+                        $(`#${this.pid} .chk-main-div`).hide();
+                        // $(`#${this.pid} .chk-horizontal-div`).hide();
+                        // $(`#${this.pid} .chk-vertical-div`).hide();
+                        $(`#${this.pid} .orientation-div`).hide();
+                        $(`#${this.pid} .chk-icon-div`).hide();
+                        $(`#${this.pid} .video-link-div`).hide();
+                        break;
+                }
+
+                
+            }
+
+            async buildForm() {
+                const mediaData = await this.getMediaFileData(this.mediaId);
+                this.setMediaFilesFormData(mediaData);
+
+                if(mediaData.TypeId == 1) { // image
+
+                    $(`#${this.pid} .files-section`).hide();
+                    $(`#${this.pid} .img-section`).show();
+
+                    this.mediaPath = mediaData.FilePath;
+                    $(`#${this.pid} .media-img`).prop('src', mediaData.FilePath)
+                }
+                if(mediaData.TypeId == 3) { // file
+                    $(`#${this.pid} .cancel-change-btn`).off('click');
+                    this.addListenerCb('.cancel-change-btn', 'click', this.onCancelFileChange.bind(this));
+                    
+                    $(`#${this.pid} .view-file-btn`).prop('href', mediaData.FilePath);
+
+                    $(`#${this.pid} .files-section`).hide();
+                    $(`#${this.pid} .file-section`).show();
+                }
+
+                if (mediaData.LanguageId != null)
+                $('#LanguageSelect').val(mediaData.LanguageId);
+                 
+            }
+
+            async getMediaFileData(mediaId) {
+
+                return await $.ajax({
+                    type: "GET",
+                    url: `${this.apiUrl}Api/MediaFile/Get?id=${mediaId}`,
+                    dataType: "json",
+                });
+
+
+            }
+
+            onChangeImg(e) {
+                $(`#${this.pid} .files-section`).show();
+                $(`#${this.pid} .img-section`).hide();
+            }
+
+            onChangeFile(e) {
+                $(`#${this.pid} .files-section`).show();
+                $(`#${this.pid} .file-section`).hide();
+            }
+
+            onCancelFileChange(e) {
+                $(`#${this.pid} .files-section`).hide();
+                $(`#${this.pid} .file-section`).show();
+
+                $(`#${this.pid} .imgs-ddl`).val([]).trigger('change');
+
+                this.files = [];
+
+            }
+
+            onCancelImgChange(e) {
+                $(`#${this.pid} .files-section`).hide();
+                $(`#${this.pid} .img-section`).show();
+
+                $(`#${this.pid} .imgs-ddl`).val([]).trigger('change');
+
+                this.files = [];
+
+            }
+
+            getImage(path) {
+                return new Promise((resolve, reject) => {
+                    const xhr = new XMLHttpRequest(); 
+                    xhr.open("GET", path); 
+                    xhr.responseType = "blob";//force the HTTP response, response-type header to be blob
+                    xhr.onload = function(){
+                        const blob = xhr.response;//xhr.response is now a blob object
+                        const file = new File([blob], '_.png');
+                        resolve(file);
+                    }
+                    xhr.send();
+                });
+                
+            }
+
+            async buildImagesDdl(typeId=1, multiple=true) {
+
+                const formatState = (state) =>  {
+                    if (!state.id) return state.text;
+                    return $(
+                        `<span class="row"> 
+                            <img class="col-sm-6 fit-img" src="${state.filePath}" /> 
+                            <span class="col-sm-6">${state.text}</span> 
+                        </span>`
+                    );
+                };
+
+                $(`#${this.pid} .imgs-ddl`).val([]).trigger('change');
+
+                $(`#${this.pid} .imgs-ddl`).select2({
+                    placeholder: 'search',
+                    tags: false,
+                    templateResult: formatState,
+                    multiple: multiple,
+                    minimumInputLength: 1,
+                    dropdownParent: $(`#${this.pid} .select-tab`),
+                    ajax: {
+                        url: `${this.apiUrl}Api/MediaFile/FilterMediaFiles`,
+                        dataType: 'json',
+                        data: function (params) {
+                            return {
+                                Name: params.term,
+                                TypeId: typeId
+                            };
+                        },
+                        processResults: function (data, params) {
+                            const items = data.map(item => ({ 
+                                id: item.Id, text: item.CaptionEn, filePath: item.FilePath,  
+                            }));
+
+                            return {
+                                results: items
+                            };
+                        },
+                        cache: true
+                    },
+
+                });
+            }
+
+            async getAllImages() {
+                try {
+                    const res = await $.ajax({
+                        method:'GET',
+                        url: `${this.apiUrl}Api/MediaFile/FilterMediaFiles?TypeId=1`,
+                    });
+                    return res;
+                }
+                catch(e) {
+                    console.log(e);
+                    return null;
+                }
+            }
+
+            // todo: clear this later
+            validateForm() {
+                $(`#${this.pid} .caption-validation`).hide();
+                $(`#${this.pid} .video-link-validation`).hide();
+                $(`#${this.pid} .file-validation`).hide();
+
+                if(this.mediaId == 0 && this.files.length == 0 && ($(`#${this.pid} .imgs-ddl`).val() == null || $(`#${this.pid} .imgs-ddl`).val().length == 0 )) {
+                    $(`#${this.pid} .file-validation`).show();
+                    return false;
+                }
+                
+                // edit case
+                if($(`#${this.pid} .caption`)[0].checkValidity() == false && this.mediaId > 0) {
+                    $(`#${this.pid} .caption-validation`).show();
+                    return false;
+                }
+
+                // add case
+                if($(`#${this.pid} .caption`)[0].checkValidity() == false && this.mediaId == 0 && this.files.length > 0) {
+                    $(`#${this.pid} .caption-validation`).show();
+                    return false;
+                }
+
+                if($(`#${this.pid} .media-type`).val() == 2 && $(`#${this.pid} .video-link`)[0].checkValidity() == false) {
+                    $(`#${this.pid} .video-link-validation`).show();
+                    return false;
+                }
+
+                return true;
+
+            }
+
+            onClickUploadTab() {
+                $(`#${this.pid} .imgs-ddl`).val([]).trigger('change');
+            }
+
+            onClickSelectTab() {
+                Dropzone.forElement(`#${this.pid} .files-dz`).removeAllFiles(true);
+                this.files = [];
+            }
+        }
+
+        
+        const _ = new MediaFilesForm(data.pid, data.recordId, data.type, data.mediaId, '@ViewData["APIURL"]', data.language);
+
+    }
+    
+    render(@Model)
+
+// const imgs = await this.getAllImages();
+// if(imgs == null) {
+//     return;
+// }
+// for(let img of imgs) {
+//     $.get(img.FilePath)
+//         .done(() => {
+//             this.imgsDict[`${img.Id}`] = img.FilePath;
+//             $(`#${this.pid} .imgs-ddl`).append($('<option>', {value: img.Id, text: `${img.CaptionEn}`}));
+//         });
+// }
+
+</script>

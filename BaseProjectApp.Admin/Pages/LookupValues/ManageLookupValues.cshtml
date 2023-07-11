@@ -1,0 +1,335 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.LookupValues.ManageLookupValuesModel
+
+@{
+    ViewData["Title"] = "Manage Lookups";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon2-list-3"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Lookup Values
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        @if (@Model._permObj.canAdd == true)
+                        {
+                            <a href="#" class="btn btn-brand btn-elevate btn-icon-sm" onclick="clearFields(); $('.__addeditbtn__').show();" data-toggle="modal" data-target="#editor-modal">
+                                <i class="la la-plus"></i>
+                                New Value
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body"> 
+            <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 order-2 order-xl-1">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                <div class="kt-input-icon kt-input-icon--left">
+
+                                    <input type="text" class="form-control" placeholder="Search..." id="lookupsSearch" runat="server" clientidmode="Static">
+                                    <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                        <span><i class="la la-search"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-4 order-1 order-xl-2 kt-align-right" style="display: none;">
+                        <a href="#" class="btn btn-default kt-hidden">
+                            <i class="la la-plus"></i>New Value
+                        </a>
+
+                        <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg d-xl-none"></div>
+                    </div>
+                </div>
+            </div>
+
+            @*class="kt-datatable"*@
+            <div  id="LookupsDiv"></div> 
+        </div>
+    </div> 
+
+    <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Value Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="editor-form">
+                        <div class="form-group row" style="display: none">
+                            <label class="col-lg-3 col-form-label">Id</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="txtId" class="form-control" />
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">English Value</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="txtNameEn" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Arabic Value</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="txtNameAr" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Parent</label>
+                            <div class="col-lg-8">
+                                <select id="ddlLookups" class="form-control" asp-items="ViewBag.Lookups" style="width:100%">
+                                    <option value="0">None</option>
+</select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    @if (@Model._permObj.canAdd == true || @Model._permObj.canEdit == true)
+                    {
+                        <button type="button" class="btn btn-primary __addeditbtn__" onclick="return onsubmitForm()">Save changes</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script>
+        var APIUrl = '@ViewData["APIURL"]';
+        var UserId = '@ViewData["UserId"]';
+
+        var lookupsDT;
+        var lookupsDataTable = function () { 
+            var lookupsDataTableObj = function () { 
+                lookupsDT = $('#LookupsDiv').KTDatatable({ 
+                    data: {
+                        type: 'remote',
+                        source: {
+                            read: {
+                                url: APIUrl + 'Api/LookupValues/All',
+                                method: 'Get',
+                            }
+                        }
+                    }, 
+                    layout: {
+                        scroll: false,  
+                        footer: false  
+                    }, 
+                    sortable: true, 
+                    pagination: true, 
+                    search: {
+                        input: $('#lookupsSearch')
+                    }, 
+                    columns: [
+                        {
+                            field: 'Id',
+                            title: 'Id',
+                            sortable: false,
+                            type: 'number',
+                            width: 30,
+                            textAlign: 'left',
+                        }, {
+                            field: 'ValueEn',
+                            title: 'English Value',
+                        }, {
+                            field: 'ValueAr',
+                            title: 'Arabic Value',
+                        }, {
+                            field: 'LookupName',
+                            title: 'Lookup',
+                        }, {
+                            field: 'Actions',
+                            title: 'Actions',
+                            sortable: false,
+                            width: 110,
+                            autoHide: false,
+                            overflow: 'visible',
+                            template: function (row) {
+                                let htmlStr = '';
+
+                                @if(@Model._permObj.canEdit == true)
+                                {
+                                    <text>
+                                        htmlStr += `
+                                        <a data-toggle="modal" data-target="#editor-modal" data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-row-data" title="Edit details">
+                                            <i class="la la-edit"></i>
+                                        </a>`;
+                                    </text>
+                                }
+
+                                @if(@Model._permObj.canEdit == false && @Model._permObj.canView == true)
+                                {
+                                    <text>
+                                        htmlStr += `
+                                        <a onclick="$('.__addeditbtn__').hide();" data-toggle="modal" data-target="#editor-modal" data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-row-data" title="Edit details">
+                                            <i class="la la-eye"></i>
+                                        </a>`;
+                                    </text>
+                                }
+
+                                @if(@Model._permObj.canDelete == true)
+                                {
+                                    <text>
+                                        htmlStr += `
+                                        <a  data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-delete-data" title="Delete">
+                                            <i class="la la-trash"></i>
+                                        </a>`;
+                                    </text>
+                                }
+                                
+                                return htmlStr;
+                            },
+                        }],
+                });
+            };
+
+            return { 
+                init: function () {
+                    lookupsDataTableObj(); 
+                    $("#LookupsDiv").on("click", ".show-row-data", function (e) {
+                        LoadLookup($(this).data("row-id"))
+                    })
+
+                    $("#LookupsDiv").on("click", ".show-delete-data", function (e) {
+                        Swal.fire({
+                            title: 'Alert',
+                            text: 'Are you sure you want to delete ?',
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+
+                        }).then((result) => {
+                            if (result.value) {
+                                DeleteLookup($(this).data("row-id"))
+                            }
+                            else if (result.dismiss === Swal.DismissReason.cancel) {
+                                result = false;
+                            }
+                        })
+
+                    })
+                }
+            };
+        }();
+
+        jQuery(document).ready(function () {
+            lookupsDataTable.init();
+            $('#ddlLookups').select2();
+
+        });
+
+        function clearFields() {
+            document.getElementById('txtId').value = "";
+            document.getElementById('txtNameEn').value = "";
+            document.getElementById('txtNameAr').value = "";
+            $("#ddlLookups").val("0").trigger('change');
+;
+        }
+
+        function onsubmitForm() {
+
+            let $modal = $('#editor-modal')
+
+             let Id = 0;
+             Id = $('#txtId').val() == undefined || $('#txtId').val() == "" ? 0 : +$('#txtId').val();  
+           
+             let Obj = new Object(); 
+
+              Obj.Id = Id;
+              Obj.ValueEn = $('#txtNameEn').val(); 
+              Obj.ValueAr = $('#txtNameAr').val();
+              Obj.LookupId = +$("#ddlLookups").val(); 
+
+ 
+               if (Obj.LookupId == 0) 
+                {
+                    AlertSwalError("Error", "Please select a Lookup")
+                    return false;
+                } 
+
+                $.ajax({
+                    type: Id == 0 ? "POST" : "PUT",
+                    url: APIUrl + 'api/LookupValues' ,
+                    data: JSON.stringify(Obj),
+                    contentType: "application/json",
+                    success: function (msg) {
+                        lookupsDT.reload()
+                        $modal.modal('hide');
+                    },
+                    error: function (request, status, error) {
+                        AlertSwalError("Error", error)
+                    }
+                });
+            
+            
+            return false;
+        }
+
+        function LoadLookup(LookupId) {
+            clearFields();
+            $.ajax({
+                type: "GET",
+                url: APIUrl + "Api/LookupValues?id=" + LookupId,
+                dataType: "text",
+                success: function (data) {
+
+                    let result = $.parseJSON(data); 
+                    
+                    $('#txtId').val(result.Id);
+                    $('#txtNameEn').val(result.ValueEn);
+                    $('#txtNameAr').val(result.ValueAr);    
+                    $("#ddlLookups").val(result.LookupId).trigger('change');
+;
+                },
+                error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+            });
+
+        }
+
+        function DeleteLookup(LookupId) {
+            $.ajax({
+                type: "Delete",
+                url: APIUrl + "Api/LookupValues?id=" + LookupId,
+                dataType: "text",
+                success: function (data) {
+                    AlertSwalSucceeded('Deleted Successfully');
+                    lookupsDT.reload();
+                },
+                error: function (request, status, error) {
+                    AlertSwalError("Error", request.responseText)
+                }
+            });
+
+        }
+
+    </script>
+
+}

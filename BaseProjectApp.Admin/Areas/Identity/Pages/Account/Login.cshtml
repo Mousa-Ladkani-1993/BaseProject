@@ -1,0 +1,235 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Log in";
+    Layout = null;
+}
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server">
+
+
+    <!--begin::Base Path (base relative path for ~/assets of this page) -->
+    <base href="././././" />
+
+    <!--end::Base Path -->
+    <meta charset="utf-8" />
+    <meta name="description" content="Login page" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Base Project App - login</title> 
+     <link rel="icon" type="image/x-icon" href="~/CMSLogoLognin64.png">
+
+    <!--begin::Fonts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.16/webfont.js"></script>
+    <script>
+        WebFont.load({
+            google: {
+                "families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"]
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            }
+        });
+    </script>
+
+    <!--end::Fonts -->
+    <!--begin::Page Custom Styles(used by this page) -->
+    <link href="~/assets/css/pages/login/login-3.css" rel="stylesheet" type="text/css" />
+
+    <!--end::Page Custom Styles -->
+    <!--begin:: Global Mandatory Vendors -->
+    <link href="~/assets/vendors/general/perfect-scrollbar/css/perfect-scrollbar.css" rel="stylesheet" type="text/css" />
+
+    <link href="~/assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
+
+    <!--end::Global Theme Styles -->
+    <!--begin::Layout Skins(used by all pages) -->
+    <link href="~/assets/css/skins/header/base/light.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/skins/header/menu/light.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/skins/brand/dark.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/skins/aside/dark.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/vendors/general/sweetalert2/dist/sweetalert2.css" rel="stylesheet" type="text/css" />
+
+    <!--end::Layout Skins -->
+    <link rel="icon" type="image/png" href="~/assets/media/logos/16.png" />
+
+</head>
+<body class="kt-quick-panel--right kt-demo-panel--right kt-offcanvas-panel--right kt-header--fixed kt-header-mobile--fixed kt-subheader--enabled kt-subheader--fixed kt-subheader--solid kt-aside--enabled kt-aside--fixed kt-page--loading">
+    <div class="kt-grid kt-grid--ver kt-grid--root" style="height: 100% !important">
+        <div class="kt-grid kt-grid--hor kt-grid--root  kt-login kt-login--v3 kt-login--signin" id="kt_login">
+            @*<img src="~/assets/media/bg/bg-3.jpg" />*@
+            <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor" style="background-image: url(@ViewBag.AppName/assets/media/bg/bg-3.jpg);">
+                <div class="kt-grid__item kt-grid__item--fluid kt-login__wrapper" style="margin-top:4rem">
+                    <div class="kt-login__container">
+                        <div class="kt-login__logo">
+                            <a href="#"> 
+                                <img src="~/CMSLogoLognin128.png" style="width: 30%;" alt="Logo" /> 
+                            </a>
+                        </div>
+                        <div class="kt-login__signin" id="login_form">
+                            <div class="kt-form">
+                                <form id="account" method="post">
+
+                                    @*   <div asp-validation-summary="All" class="FailureText"></div>*@
+                                    <div class="input-group">
+                                        <input asp-for="Input.Email" class="form-control" placeholder="Username" />
+                                        <span asp-validation-for="Input.Email" class="text-danger" style="margin-top: 2rem;"></span>
+                                    </div>
+                                    <div class="input-group">
+                                        <input asp-for="Input.Password" class="form-control" placeholder="Password" />
+                                        <span asp-validation-for="Input.Password" class="text-danger" style="margin-top: 2rem;"></span>
+                                    </div>
+                                    <div class="row kt-login__extra">
+                                        <div class="col">
+                                            <label class="kt-checkbox" asp-for="Input.RememberMe">
+                                                <input asp-for="Input.RememberMe" />
+                                                @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                                <span></span>
+                                            </label>
+                                        </div>
+
+
+                                        <div class="col kt-align-right">
+           <p class="text-danger">@ViewBag.Message</p>
+        </div> 
+                                    </div>
+                                    <div class="kt-login__actions">
+                                        <button type="submit" class="btn btn-brand btn-elevate kt-login__btn-primary">Log in</button>
+                                    </div>
+
+                                 
+
+                                    @*<a href="javascript:;" id="resetPasswordBtn" onclick="onClickResetPassword()" class="kt-login__link">Reset Password ?</a>*@
+                                    @* <div class="form-group">
+                                    <p>
+                                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
+                                    </p>
+                                    <p>
+                                        <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
+                                    </p>
+                                    <p>
+                                        <a id="resend-confirmation" asp-page="./ResendEmailConfirmation">Resend email confirmation</a>
+                                    </p>
+                                </div> *@
+                                </form>
+                            </div>
+                        </div>
+                        @*<div class="_kt-login__forgot" id="reset_form" style="display: none;">
+                        <div class="kt-login__head">
+                            <h3 class="kt-login__title">Forgotten Password ?</h3>
+                            <div class="kt-login__desc">Enter your email to reset your password:</div>
+                        </div>
+                        <form class="kt-form" action="">
+                            <div class="input-group">
+                                <input class="form-control" type="email" required placeholder="Email" id="email_reset" autocomplete="off">
+                            </div>
+                                <span id="email_reset_validation" style="color: red;"></span>
+                            <div class="kt-login__actions">
+                                <button id="kt_login_forgot_submit" class="btn btn-brand btn-elevate kt-login__btn-primary" type="button" onclick="resetPassword()">Request</button>&nbsp;&nbsp;
+                                <button id="cancelResetPasswordBtn" onclick="onClickCancelResetPasswordBtn()" class="btn btn-light btn-elevate kt-login__btn-secondary">Cancel</button>
+                            </div>
+                        </form>
+                    </div>*@
+                        @*<div class="kt-login__forgot">
+                        <div class="kt-login__head">
+                            <h3 class="kt-login__title">Forgotten Password ?</h3>
+                            <div class="kt-login__desc">Enter your email to reset your password:</div>
+                            <div class="kt-login__desc" id="lblMsg" runat="server"></div>
+                        </div>
+                        <div class="kt-form">
+                            <div class="input-group ">
+                                <div class="row" style="width: 100%">
+                                    <asp:TextBox ID="txtEmail" ClientIDMode="Static" runat="server" placeholder="Email" class="form-control"></asp:TextBox>
+                                </div>
+                            </div>
+                            <div class="kt-login__actions">
+                                <asp:Button runat="server" ID="kt_login_forgot_submit" class="btn btn-brand btn-elevate kt-login__btn-primary" Text="Submit"
+                                            OnClick="btnRecoverPassword_Click" OnClientClick="return checkMail();"></asp:Button>&nbsp;&nbsp;
+                                <button id="kt_login_forgot_cancel" class="btn btn-light btn-elevate kt-login__btn-secondary">Cancel</button>
+                            </div>
+                        </div>
+                    </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_ValidationScriptsPartial" />
+
+    <!--<script>
+
+        function onClickResetPassword() {
+            $('#login_form').hide();
+            $('#reset_form').show();
+        }
+
+        function onClickCancelResetPasswordBtn() {
+            $('#login_form').show();
+            $('#reset_form').hide();
+            $('#email_reset_validation').text('');
+        }
+
+        function resetPassword() {
+            if($('#email_reset')[0].checkValidity() == false) {-->
+                @* alert('enter valid email'); *@
+                <!--$('#email_reset_validation').text('enter valid email');
+                return;
+            }
+            else {
+                $('#email_reset_validation').text('');
+            }
+            const email = $('#email_reset').val();
+            $.ajax({
+                method: 'POST',
+                url: `./Login?handler=ResetPassword&email=${email}`,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("XSRF-TOKEN",
+                        $('input:hidden[name="__RequestVerificationToken"]').val());
+                },
+                success: (res) => {
+                    if(res.status) {
+                        swal.fire(res.msg, '',  'success');
+                        onClickCancelResetPasswordBtn();
+                    }
+                    else {
+                        swal.fire(res.msg, '',  'error');
+                    }
+                    
+                },
+                error: (error) => {
+                    swal.fire('error message', '', 'error');
+                    console.log(error);
+                }
+            });
+        }
+    </script>-->
+
+    
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+
+        @*<script>
+
+            function onClickResetPassword() {
+                
+                $('#kt-login__signin').hide();
+                $('#_kt-login__forgot').show();
+            }
+
+            function onClickCancelResetPasswordBtn() {
+                $('#kt-login__signin').show();
+                $('#_kt-login__forgot').hide();
+            }
+
+            function resetPassword() {
+                fetch()
+            }
+
+        </script>*@
+        
+    }
+</body>
+</html>

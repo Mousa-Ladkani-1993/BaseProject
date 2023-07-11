@@ -1,0 +1,284 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.Menus.ManageMenuModel
+
+@{
+    ViewData["Title"] = "Custom Menus";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+
+<style>
+    #ddlMobileCustomMenus {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: '';
+    }
+
+    .UploadedImg {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 90%;
+        border-radius: 5px;
+    }
+</style>
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet">
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon2-checking"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Menu Details
+                </h3>
+            </div>
+        </div>
+        <div class="kt-form">
+            <div class="kt-portlet__body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basicInfo" role="tabpanel" runat="server" clientidmode="static">
+                        <form id="MobileCustomMenuForm" class="SubmitForm" method="post">
+                            <div class="col-sm-12">
+                                <div class="form-group row" style="display: none">
+                                    <label class="col-sm-2 col-form-label">Id</label>
+                                    <div class="col-sm-6">
+                                        <label asp-for="MobileCustomMenu.Id" class="control-label"></label>
+                                        <input asp-for="MobileCustomMenu.Id" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label"></label>
+                                    <div class="col-sm-6" style="padding-top: 8px">
+                                        <div class="kt-checkbox-list">
+                                            <label class="kt-checkbox kt-checkbox--brand">
+                                                <input type="checkbox" asp-for="Active" />
+                                                Active
+                                                <span></span>
+
+                                            </label>
+                                            <label class="kt-checkbox kt-checkbox--brand">
+                                                <input type="checkbox" asp-for="ShowInDrawer" />
+                                                Show In Drawer
+                                                <span></span>
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Label</label>
+                                    <div class="col-6">
+                                        <input type="text" asp-for="Label" class="ConstraintHiddenInput form-control" id="LabelText" maxlength="255" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Link</label>
+                                    <div class="col-6">
+                                        <input type="text" asp-for="Link" class="ConstraintHiddenInput form-control" id="LinkText" maxlength="255" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Priority</label>
+                                    <div class="col-6">
+                                        <input type="text" asp-for="Priority" class="ConstraintHiddenInput form-control" id="LinkText" maxlength="255" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Parent</label>
+                                    <div class="col-6">
+                                        <select class="form-control" asp-for="ParentId" asp-items="ViewBag.Parents">
+                                            <option value="0">---</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Name</label>
+                                    <div class="col-10">
+                                        <ul class="nav nav-tabs  nav-tabs-line nav-tabs-line-primary" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#kt_NameEng" role="tab">English</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#kt_NameAR" role="tab">Arabic</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="kt_NameEng" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <input type="text" asp-for="Name" title="English name" class="ConstraintHiddenInput form-control" id="NameEnText" maxlength="255" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="kt_NameAR" role="tabpanel">
+
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <input type="text" class="ConstraintHiddenInput form-control" title="Arabic name" maxlength="255" id="NameArText" asp-for="NameAr" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Summary</label>
+                                    <div class="col-sm-9">
+                                        <ul class="nav nav-tabs  nav-tabs-line nav-tabs-line-primary" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#kt_SEng" role="tab">English</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#kt_SAR" role="tab">Arabic</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="kt_SEng" role="tabpanel">
+                                                <textarea maxlength="10000" class="form-control" asp-for="Summary"></textarea>
+                                            </div>
+                                            <div class="tab-pane" id="kt_SAR" role="tabpanel">
+                                                <textarea maxlength="10000" class="form-control" asp-for="SummaryAr"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Details</label>
+                                    <div class="col-sm-9">
+                                        <ul class="nav nav-tabs  nav-tabs-line nav-tabs-line-primary" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#kt_DEng" role="tab">English</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#kt_DAR" role="tab">Arabic</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="kt_DEng" role="tabpanel">
+                                                <textarea maxlength="10000" class="tinymce" asp-for="Details"></textarea>
+                                            </div>
+                                            <div class="tab-pane" id="kt_DAR" role="tabpanel">
+                                                <textarea maxlength="10000" class="tinymce" asp-for="DetailsAr"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="form-group row" id="uploadImage">
+                                    <label class="col-2 col-form-label">Icon</label>
+                                     <div class="col-sm-9">
+                                        <div class="form-group row" style="display: none">
+                                            <label class="col-lg-3 col-form-label">Id</label>
+                                            <div class="col-lg-8">
+                                                <input type="text" asp-for="ImageId" id="ImageId" class="form-control" />
+                                            </div>
+                                            <input type="text" asp-for="Image" id="Image" title="Image" class="form-control ImgUploader" />
+                                            <input type="text" asp-for="ImageUrl" id="ImageUrl" class="form-control" />
+                                        </div>
+
+                                        <div class="kt-dropzone dropzone" style="width:79%" action="~" id="ImageUploadDZ">
+                                            <div class="kt-dropzone__msg dz-message needsclick">
+                                                <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="progress mt-3" id="ImageUploadDZ_fileProgressDiv" style="width: 79%;height:7%;;display:none">
+                                            <div class="progress-bar progress-bar-primary" id="ImageUploadDZ_fileProgress" role="progressbar" data-dz-uploadprogress>
+                                                <span class="font-weight-bold progress-text" id="ImageUploadDZ_fileProgresstxt"></span>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row" id="ImageEdit" style="padding-top: 3%; display: none;">
+                                            <div class="col-6">
+                                                <input style="display:none" id="ImageSrcI" asp-for="ImageSrc" />
+                                                <img class="rounded shadow PanelImage" src="" id="ImageSrc" />
+                                            </div>
+                                            <div class="col-4 offset-2" style="display: flex; align-items: center;">
+                                                <a href="" id="changeImageId" class="btn btn-primary btn-sm" onclick="changeImage(event)">Change</a>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="row mt-3" id="cancelImageDiv" style="display:none">
+                                            <div class="col-3">
+                                                <a href="" style="display:none" id="cancelImageId" class="btn btn-primary btn-sm" onclick="cancelAddImage(event)">Cancel</a>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+
+                                <div class="kt-portlet__foot" id="divSaveButtons" runat="server" style="padding: 20px 0px 0px 0px !important;">
+                                    <div class="kt-form__actions">
+
+
+                                        @if (@Model._permObj.canAdd == true || @Model._permObj.canEdit == true)
+                                        {
+                                            @if (Model.Edit ? @Model._permObj.canEdit == true : @Model._permObj.canAdd == true)
+                                            {
+                                                <div class="btn-group">
+                                                    <button type="submit" asp-page-handler="SaveAndContinue" class="btn btn-primary SaveBtn"><i class="la la-save"></i> Save & Continue</button>
+                                                    <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                        <span class="sr-only">Toggle Dropdown</span>
+                                                    </button>
+                                                    <div class="dropdown-menu">
+                                                        <button type="submit" asp-page-handler="SaveAndExit" class="dropdown-item SaveBtn">Save & Exit</button>
+
+                                                        <button type="submit" asp-page-handler="SaveAndAddNew" class="dropdown-item SaveBtn">Save & Add New</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+
+                                        <div class="btn-group">
+                                            <a href="ManageMenus" class="btn btn-outline-hover-danger btn-square">
+                                                <i class="la la-close"></i> Cancel
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+
+<script> 
+    var MobileCustomMenuId = '@ViewData["MobileCustomMenuId"]';
+    var ImageUploadDZId = 0;
+    var APIUrl = '@ViewData["APIURL"]';
+    var UserId = '@ViewData["UserId"]'; 
+    var DevelopmentLocalhost = '@ViewData["DevelopmentLocalhost"]';
+
+</script>
+
+
+<script src="~/js/Pages/Menus/ManageMenu.js"></script>
+    }

@@ -1,0 +1,256 @@
+﻿ 
+
+.kt-datatable__head_NewBtn {
+    background-color: #092038 !important;
+    color: white !important;
+}
+
+    .kt-datatable__head_NewBtn:hover {
+        background-color: #1f3f62 !important;
+    }
+
+    .kt-datatable__head_NewBtn:focus {
+        background-color: #041323 !important;
+    }
+
+.kt-datatable__head {
+    background-color: #092038;
+    border-radius: 5px;
+}
+
+th.kt-datatable__cell span {
+    color: white !important;
+}
+
+.SearchBoxaccordion.accordion > .card {
+    overflow: unset;
+}
+
+.HiddenClass {
+    display: none !important;
+}
+
+.ModelNumberDiv .comboTreeWrapper .comboTreeInputWrapper .comboTreeArrowBtn span {
+    background-color: #e1e1e1 !important;
+    border-radius: 0px 1px 0px 0px;
+    padding-bottom: 1rem;
+    border: 0.1px #e1e1e1 solid;
+}
+
+.ModelNumberDiv .comboTreeWrapper .comboTreeDropDownContainer input {
+    outline: none !important;
+}
+
+.Custom-pagination {
+    display: inline-block;
+    width: 100% !important;
+}
+
+    .Custom-pagination a {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        margin: 2px;
+    }
+
+        .Custom-pagination a.active {
+            border-radius: 3px;
+        }
+
+        .Custom-pagination a:hover:not(.active) {
+            border-radius: 5px;
+        }
+
+.ErrorMessage-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 20px;
+    max-height: 160px;
+    -webkit-line-clamp: 8;
+    -webkit-box-orient: vertical;
+    white-space: pre-line;
+}
+
+
+.PagingSelect {
+    font-size: 11px;
+    width: 120px !important;
+}
+
+.PagingAnkor {
+    cursor: pointer !important;
+    font-weight: 600 !important;
+    padding: 7px 10.5px !important;
+    font-size: 11px;
+}
+
+
+.PagingAnkor-NavBtn {
+    cursor: pointer !important;
+    padding: 9px 8px !important;
+    border-radius: 3px;
+    /*background-color: #5d78ff;*/
+    background-color: rgb(240, 243, 255);
+    color: #aeb3d5 !important;
+    font-size: 9px !important;
+}
+
+.PagingAnkor-NavBtn-Disabled {
+    cursor: not-allowed !important;
+    padding: 9px 8px !important;
+    border-radius: 3px;
+    color: #93a2dd !important;
+    background: #f0f3ff !important;
+    opacity: 0.3;
+    font-size: 9px !important;
+}
+
+.Modal-small-img {
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+
+    .Modal-small-img:hover {
+        opacity: 0.7;
+    }
+
+.ImgModal {
+    display: none;
+    position: fixed;
+    z-index: 99999999;
+    padding-top: 10px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.9);
+}
+
+.ImgModal-close {
+    position: absolute;
+    right: 35px;
+    top: 10px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.ImgModal-content {
+    margin: auto;
+    display: block;
+    margin-top: 3rem;
+    width: 500px;
+    height: 500px;
+    object-fit: contain;
+}
+
+
+#ImgModal-caption {
+    margin: auto;
+    display: block;
+    width: 80%;
+    text-align: center;
+    color: white;
+    padding: 10px 0;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.modal-content, #ImgModal-caption {
+    -webkit-animation-name: zoom;
+    -webkit-animation-duration: 0.6s;
+    animation-name: zoom;
+    animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+    from {
+        -webkit-transform: scale(0)
+    }
+
+    to {
+        -webkit-transform: scale(1)
+    }
+}
+
+@keyframes zoom {
+    from {
+        transform: scale(0)
+    }
+
+    to {
+        transform: scale(1)
+    }
+}
+
+.ImgModal-close:hover,
+.ImgModal-close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 700px) {
+    .modal-content {
+        width: 100%;
+    }
+}
+
+*::-webkit-scrollbar {
+    width: 4px;
+    height: 10px !important;
+}
+
+*::-webkit-scrollbar-track {
+    background: #ffffff;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #aeb3d5;
+    border-radius: 0px;
+    border: 0px groove #ffffff;
+}
+
+.kt-notification .kt-notification__item:after {
+    display: none;
+}
+
+
+.LandingPageCard-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    line-height: 20px;
+    max-height: 100px;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    white-space: pre-line;
+}
+
+.col-xl-2.order-1.order-xl-1 {
+    margin-left: 1%;
+}
+
+.PanelImage {
+    max-width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}
+
+
+.dz-error-message {
+    top: -55px !important;
+    font-weight: 500;
+    background: linear-gradient(to bottom, #fd3995, #fd3995) !important;
+    opacity: 40;
+}
+
+    .dz-error-message::after {
+        display: none !important;
+    }

@@ -1,0 +1,65 @@
+@page
+@model BaseProjectApp.Admin.Pages._Shared._SharedModel
+
+@{
+    ViewData["Title"] = "_shared test";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+
+<button class="btn btn-primary" id="__btn" onclick="reload();">
+    toggle modal
+</button>
+
+
+<button class="btn btn-primary" id="_btn_" onclick="loadDz()">
+    show dropzone
+</button>
+
+<div id="parent">
+
+</div>
+
+
+<div id="parent-1">
+
+</div>
+
+@section Scripts
+{
+    <script>
+        function reload() {
+
+            $.ajax({
+                method: 'GET',
+                url: './_Shared?handler=LoadMediaFilesFormLoadMediaFilesForm&pid=parent&recordId=2&type=SupplierImage&mediaId=1172',
+                success: (res) => {
+                    $('#parent').html(res);
+                    $(`#parent .media-files-modal`).modal('show');
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+
+        }
+
+
+
+        function loadDz() {
+
+            $.ajax({
+                method: 'GET',
+                url: './_Shared?handler=LoadFilesDropzone&pid=parent-1&mediaId=0',
+                success: (res) => {
+                    $('#parent-1').html(res);
+                },
+                error: (err) => {
+                    console.log(err);
+                }
+            });
+
+        }
+
+    </script>
+}

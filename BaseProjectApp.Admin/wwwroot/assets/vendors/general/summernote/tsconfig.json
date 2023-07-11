@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./built",
+    "allowJs": true,
+    "sourceMap": true,
+    "experimentalDecorators": true
+  },
+  "include": [
+    "./src/**/*.js",
+    "./src/**/*.ts", "../../../../../BaseProjectApp.Library/Modals/EventResponse.cs", "../../../../ViewProductReview.aspx", "../../../../../ECommerce.API/Controllers/ProductVariationsController.cs", "../../../../../ECommerce.API/Controllers/ProductColorController.cs", "../../../../../YLP.Library/Adapters/ProductVariationAdapter.cs", "../../../../../YLP.Library/Adapters/ShippingAddressAdapter.cs", "../../../../../YLP.Library/Adapters/ProductColorAdapter.cs", "../../../../../YLP.Library/Modals/BrandResponse.cs", "../../../../../YLP.Library/Modals/ProductResponse.cs", "../../../../../YLP.Library/Modals/ProductMaterialResponse.cs", "../../../../ManageMaterials.aspx", "../../../../../YLP.Library/Modals/ShippingAddressResponse.cs", "../../../../../YLP.Library/Modals/PromoResponse.cs", "../../../../../YLP.Library/Modals/PromoDetailsResponse.cs", "../../../../../YLP.Library/Modals/ShoppingCartResponse.cs", "../../../../../YLP.Library/Modals/ShoppingCartProductResponse.cs", "../../../../../YLP.Library/Modals/VisitedProductResponse.cs", "../../../../ManageClientProfile.aspx.cs", "../../../../../YLP.Library/Adapters/NotificationAdapter.cs"
+  ]
+}

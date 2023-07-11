@@ -1,0 +1,495 @@
+﻿@page
+@model EDP.Admin.Pages.TextVars.ManageVarModel
+@{ ViewData["Title"] = "Text variables";
+    Layout = "~/Pages/Shared/_Layout.cshtml"; }
+
+
+<style>
+    /* select::-ms-expand {
+        display: none;
+    }*/
+
+    #ddlTextVars {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        text-indent: 1px;
+        text-overflow: '';
+    }
+
+    .VarImage {
+        width: 150px;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 5px;
+        margin: 2px;
+    }
+</style>
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet">
+        <div class="kt-portlet__head">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon2-checking"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Text Var Details
+                </h3>
+            </div>
+
+        </div>
+        <div class="kt-form">
+            <div class="kt-portlet__body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="basicInfo" role="tabpanel" runat="server" clientidmode="static">
+                        <form id="TextVarForm" method="post">
+                            <div class="col-sm-12">
+                                <div class="form-group row" style="display: none">
+                                    <label class="col-sm-2 col-form-label">Id</label>
+                                    <div class="col-sm-6">
+                                        <label asp-for="textVar.Id" class="control-label"></label>
+                                        <input asp-for="textVar.Id" class="form-control" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Name</label>
+                                    <div class="col-6">
+                                        <input class="form-control" maxlength="500" type="text" asp-for="Name" />
+                                    </div>
+                                    <div class="col-4">
+                                        <span asp-validation-for="Name" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-2 col-form-label">Link</label>
+                                    <div class="col-9">
+                                        <ul class="nav nav-tabs  nav-tabs-line nav-tabs-line-primary" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#kt_LinkEng" role="tab">English</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#kt_LinkAR" role="tab">Arabic</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="kt_LinkEng" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <input type="text" asp-for="LinkEn" title="English Link" class="ConstraintHiddenInput form-control" id="LinkEnText" maxlength="255" />
+                                                    </div>
+                                                    <div class="col-3 ">
+                                                        <div class="row">
+                                                            <div class="col-12"> <span asp-validation-for="LinkEn" class="text-danger LinkEnTextRule ValidatorSpan"></span></div>
+                                                            <div class="col-12"><span asp-validation-for="LinkAr" class="text-danger LinkArTextRule ValidatorSpan"></span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="kt_LinkAR" role="tabpanel">
+
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <input type="text" class="ConstraintHiddenInput form-control" title="Arabic Link" maxlength="255" id="LinkArText" asp-for="LinkAr" />
+                                                    </div>
+                                                    <div class="col-3 ">
+                                                        <div class="row">
+                                                            <div class="col-12"> <span asp-validation-for="LinkEn" class="text-danger LinkEnTextRule ValidatorSpan"></span></div>
+                                                            <div class="col-12"><span asp-validation-for="LinkAr" class="text-danger LinkArTextRule ValidatorSpan"></span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">Data</label>
+                                    <div class="col-sm-9">
+                                        <ul class="nav nav-tabs  nav-tabs-line nav-tabs-line-primary" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#kt_DEng" role="tab">English</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#kt_DAR" role="tab">Arabic</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="kt_DEng" role="tabpanel">
+                                                <textarea class="tinymce" maxlength="10000" asp-for="DataEn"></textarea>
+                                            </div>
+                                            <div class="tab-pane" id="kt_DAR" role="tabpanel">
+                                                <textarea class="tinymce" maxlength="10000" asp-for="DataAr"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                @*<div class="form-group row">
+                                    <label class="col-2 col-form-label">Data</label>
+                                    <div class="col-9">
+                                        <ul class="nav nav-tabs  nav-tabs-line nav-tabs-line-primary" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link active" data-toggle="tab" href="#kt_DataEng" role="tab">English</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" data-toggle="tab" href="#kt_DataAR" role="tab">Arabic</a>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="kt_DataEng" role="tabpanel">
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <textarea asp-for="DataEn" title="English Data" class="tinymce ConstraintHiddenInput" id="DataEnText"></textarea>
+                                                    </div>
+                                                    <div class="col-3 ">
+                                                        <div class="row">
+                                                            <div class="col-12"> <span asp-validation-for="DataEn" class="text-danger DataEnTextRule ValidatorSpan"></span></div>
+                                                            <div class="col-12"><span asp-validation-for="DataAr" class="text-danger DataArTextRule ValidatorSpan"></span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="tab-pane" id="kt_DataAR" role="tabpanel">
+
+                                                <div class="row">
+                                                    <div class="col-8">
+                                                        <textarea asp-for="DataAr" title="Arabic Data" class="tinymce ConstraintHiddArInput" id="DataArText"></textarea>
+                                                    </div>
+                                                    <div class="col-3 ">
+                                                        <div class="row">
+                                                            <div class="col-12"> <span asp-validation-for="DataEn" class="text-danger DataEnTextRule ValidatorSpan"></span></div>
+                                                            <div class="col-12"><span asp-validation-for="DataAr" class="text-danger DataArTextRule ValidatorSpan"></span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>*@
+
+
+
+                                @if (@Model._permObj.canAdd == true || @Model._permObj.canEdit == true)
+                                {
+                                    <div class="kt-portlet__foot" id="divSaveButtons" runat="server" style="padding: 20px 0px 0px 0px !important;">
+                                        <div class="kt-form__actions">
+                                            <div class="btn-group">
+                                                <button type="submit" asp-page-handler="SaveAndContinue" class="btn btn-primary SaveBtn"><i class="la la-save"></i> Save & Continue</button>
+                                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="sr-only">Toggle Dropdown</span>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <button type="submit" asp-page-handler="SaveAndExit" class="dropdown-item SaveBtn">Save & Exit</button>
+
+                                                    <button type="submit" asp-page-handler="SaveAndAddNew" class="dropdown-item SaveBtn">Save & Add New</button>
+                                                </div>
+                                            </div>
+                                            <div class="btn-group">
+                                                <a href="ManageVars" class="btn btn-outline-hover-danger btn-square">
+                                                    <i class="la la-close"></i> Cancel
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="media-file-p1"></div>
+
+@section Scripts {
+
+
+
+    <script>
+
+       //var UploadedImages = [];
+
+       // Dropzone.autoDiscover = false;
+
+       // $("#ImageUploadDZ").dropzone({
+       //     autoProcessQueue: false,
+       //     acceptedFiles: 'image/*',
+       //     addRemoveLinks: true,
+       //     maxFiles: 6,
+       //     accept: function (file, done) {
+       //         done();
+       //     },
+       //     init: function () {
+       //         this.on("addedfile", function () {
+
+       //            UploadedImages = this.files;
+
+       //             // UploadedImages.push(this.files);
+
+       //         });
+
+       //         this.on("removedfile", function () {
+       //             UploadedImages = this.files;
+
+       //             //if (UploadedImages != null && UploadedImages.length == 0)
+       //             //    UploadedImages = null;
+       //         });
+
+       //         this.on("maxfilesexceeded", function (file) {
+       //             this.removeAllFiles();
+       //             this.addFile(file);
+       //         });
+       //     }
+       // });
+
+
+        var APIUrl = '@ViewData["APIURL"]';
+        var UserId = '@ViewData["UserId"]';
+        var textVarId = '@ViewData["VarId"]';
+        var DevelopmentLocalhost = '@ViewData["DevelopmentLocalhost"]';
+
+        toUploadFiles = [];
+
+        var TextVarId = '@Model.BindedVarId'
+
+        var SelectedTextVarId = '@ViewData["textVarId"]';
+
+
+        jQuery(document).ready(function () {
+
+            //
+            //if (textVarId != null || textVarId.trim() != '') {
+            //    _getMediaId();
+
+            //}
+
+            //if (textVarId == null || textVarId == 0) {
+            //    $('#ImageUploadDZ').show();
+            //    $('#ImageEdit').hide();
+            //    $('#cancelImageId').hide()
+
+            //}
+
+            $("#TextVarForm").submit(function (event) {
+                      ClearValiditors();
+                return checkValidity();
+            });
+
+        });
+
+        $(document).ready(() => {
+            rxjs.fromEvent(window, 'media-file-p1_save-done').subscribe((res) => {
+                if (res.detail.success) {
+                    dt.reload();
+                }
+            });
+        });
+
+        function UpdateIconsContent() {
+
+            
+
+            if (UploadedImages == null || UploadedImages.length == 0)
+                return false;
+            else {
+
+
+                let names = [];
+                let urls = [];
+
+                for (let i = 0; i < UploadedImages.length; i++) {
+
+                    names.push(UploadedImages[i].name);
+                    urls.push(UploadedImages[i].dataURL);
+                }
+
+                const ImageImage = names.join("$");
+
+                    //UploadedImages.length == 0 ? '' : UploadedImages[0].name;
+                const ImageImageUrl = urls.join("$");
+
+                    //UploadedImages.length == 0 ? '' : UploadedImages[0].dataURL;
+
+                $('#TextVarImage').val(ImageImage);
+                $('#TextVarImageUrl').val(ImageImageUrl);
+
+            }
+
+
+        }
+
+        function _getMediaId() {
+
+            
+
+            var url = APIUrl + 'Api/MediaFile/GetTextVarImagesById?TextVarId=' + textVarId;
+
+            $.ajax({
+                type: "GET",
+                url: url,
+                dataType: "text",
+                success: function (result) {
+                    if (result != null) {
+
+                        let json = $.parseJSON(result);
+
+                        if (json == null || json.length == 0)
+                            return;
+
+                        
+
+                        const Localhost = DevelopmentLocalhost == null ? '' : DevelopmentLocalhost;
+
+                        let ApplicationUrl = window.location.href.split('/TextVars')[0];
+
+                        let ApplicationUrlCut = window.location.href.split('/TextVars')[0];
+
+                        if (ApplicationUrlCut.replace(Localhost,'').length < 2)
+                            ApplicationUrl = '';
+
+                        document.getElementById("ImageUploadDZ").style.display = "none";
+                        document.getElementById("ImageEdit").style.display = "";
+
+
+
+                        let ids = [];
+                        let names = [];
+                        //let images = [];
+
+                        for (let i = 0; i < json.length; i++) {
+
+                            ids.push(json[i].Id);
+                            names.push(json[i].FileName);
+
+
+                            let img = $('<img>');
+                            img.attr('src', ApplicationUrl + json[i].FilePath);
+                            img.addClass('VarImage');
+
+                            img.appendTo('#DivImages');
+
+                        }
+
+
+                        $('#ImageId').val(ids.join('$'));
+                        $('#TextVarImage').val(names.join('$'));
+
+                        //images.each(function (index) {
+                        //    $(this)
+                        // });
+
+                        //img.appendTo('#DivImages');
+
+                      //  $("#ImageSrc").attr("src", ApplicationUrl + json[0].FilePath);
+
+                    }
+                },
+            });
+
+        }
+
+
+        function checkValidity() {
+
+            let validForm = true;
+
+            $('.ConstraintHiddenInput').each(function (index) {
+
+                if($(this).hasClass('ImgUploader') && textVarId != null && textVarId > 0)
+                return;
+
+               const currentInputId = $(this).attr('id');
+               const currentInputlbl = $(this).attr('title');
+
+                if (currentInputId != undefined && currentInputId != '') {
+
+                       const targetSpanClass = currentInputId + 'Rule';
+                       if ($('#' + currentInputId).val() == '') {
+                                   $('.' + targetSpanClass).each(function (index) {
+                                       $(this).html(currentInputlbl == undefined ||  currentInputlbl == '' ? currentInputId : currentInputlbl + ' is required');
+                                       validForm = false;
+                               });
+                           }
+                       }
+                    });
+
+
+
+            $('.ConstraintHiddenSelect').each(function (index) {
+
+                const currentSelectId = $(this).attr('id');
+                const currentSelectlbl = $(this).attr('title');
+                const HasConstraintHiddenSelectIgnoreClass = $(this).hasClass('ConstraintHiddenSelectIgnore');
+                let ignoreThis = false;
+
+                if (currentSelectId != undefined && currentSelectId != '' && HasConstraintHiddenSelectIgnoreClass) {
+                    if ($('#' + currentSelectId + 'Div').css('display') == 'none') {
+                        ignoreThis = true;
+                    }
+
+                }
+
+                if (currentSelectId != undefined && currentSelectId != '' && !ignoreThis) {
+
+                    const targetSpanClass = currentSelectId + 'Rule';
+                    if ($('#' + currentSelectId).val() == '0') {
+                        $('.' + targetSpanClass).each(function (index) {
+                            $(this).html('Please select ' + (currentSelectlbl == undefined || currentSelectlbl == '' ? currentInputId : currentSelectlbl));
+                            validForm = false;
+                        });
+                    }
+                }
+            });
+
+
+            return validForm;
+        }
+
+        function ClearValiditors() {
+            $('.ValidatorSpan').each(function (index) {
+                        $(this).html('');
+            });
+        }
+
+
+        function cancelAddImage(e) {
+            e.preventDefault();
+
+            document.getElementById("ImageUploadDZ").style.display = "none";
+            document.getElementById("ImageEdit").style.display = "";
+
+            document.getElementById("changeImageId").style.display = "";
+            document.getElementById("cancelImageId").style.display = "none";
+
+            Dropzone.forElement('#ImageUploadDZ').removeAllFiles(true);
+            UploadedImages = null;
+
+            return false;
+        }
+
+
+        function changeImage(e) {
+            e.preventDefault();
+
+            document.getElementById("ImageUploadDZ").style.display = "";
+            document.getElementById("ImageEdit").style.display = "none";
+
+            document.getElementById("changeImageId").style.display = "none";
+            document.getElementById("cancelImageId").style.display = "";
+
+            Dropzone.forElement('#ImageUploadDZ').removeAllFiles(true);
+            UploadedImages = null;
+
+            return false;
+        }
+
+    </script>
+
+}

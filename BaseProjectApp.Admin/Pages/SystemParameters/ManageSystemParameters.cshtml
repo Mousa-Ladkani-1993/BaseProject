@@ -1,0 +1,381 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.SystemParameters.ManageSystemParametersModel
+
+@{
+    ViewData["Title"] = "System Parameters";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="row">
+        <div class="kt-portlet kt-portlet--mobile">
+            <div class="kt-portlet__head kt-portlet__head--lg">
+                <div class="kt-portlet__head-label">
+                    <span class="kt-portlet__head-icon">
+                        <i class="kt-font-brand flaticon2-list-2"></i>
+                    </span>
+                    <h3 class="kt-portlet__head-title">
+                        System Parameters
+                    </h3>
+                </div>
+            </div>
+            <div class="kt-portlet__body"> 
+                <div class="kt-form kt-form--label-right  kt-margin-b-10">
+                    <div class="row align-items-center">
+                        <div class="col-xl-8 order-2 order-xl-1">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                    <div class="kt-input-icon kt-input-icon--left">
+
+                                        <input type="text" class="form-control" placeholder="Search..." id="SystemParamsSearch" runat="server" clientidmode="Static">
+                                        <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                            <span><i class="la la-search"></i></span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                 
+                <div id="SystemParamsDiv"></div> 
+            </div>
+        </div>
+    </div>
+</div>
+ 
+<div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Edit System Parameter</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="editor-form">
+                    <div class="form-group row" style="display: none">
+                        <label class="col-lg-3 col-form-label">Id</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="txtId" class="form-control" />
+                            <input type="text" id="lblTypeId" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Name</label>
+                        <div class="col-lg-8">
+                            <label id="lblName" class="form-control"></label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-form-label">Value</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="txtTextValue" class="form-control" style="display:none" />
+                            <input type="text" id="txtNumericValue" class="form-control decimal-value" style="display:none" />
+
+                            <div class="input-group date" id="dtpDateValueContainer" style="display:none">
+                                <input type="text" id="dtpDateValue" class="form-control datePicker" />
+                                <div class="input-group-append">
+                                    <span class="input-group-text">
+                                        <i class="la la-calendar"></i>
+                                    </span>
+                                </div>
+                            </div>
+                            <label class="kt-checkbox kt-checkbox--brand" id="chkBoolValueContainer" style="display:none">
+                                <input type="checkbox" id="chkBoolValue" runat="server" />
+                                <span></span>
+                            </label>
+                            <span class="error invalid-feedback" id="valueValidator">Please Fill In Value Field!!</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btnCloseModal" data-dismiss="modal">Close</button>
+                <button id="btnSave" runat="server" type="button" class="btn btn-primary" onclick="return onSubmitSystemParameter();">Save Parameter</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{ 
+
+    <script>
+
+        $('.decimal-value').keypress(function (e) {
+            if (e.which == 46) {
+                if ($(this).val().indexOf('.') != -1) {
+                    return false;
+                }
+            }
+
+            if (e.which != 8 && e.which != 0 && e.which != 46 && (e.which < 48 || e.which > 57)) {
+                return false;
+            }
+        });
+
+        $('.decimal-value').on('paste', function (event) {
+            if (event.originalEvent.clipboardData.getData('Text').match(/[^\d]/)) {
+                event.preventDefault();
+            }
+        });
+
+        $('.datePicker').datepicker({
+            format: 'dd/mm/yyyy',
+            rtl: KTUtil.isRTL(),
+            todayBtn: "linked",
+            clearBtn: true,
+            todayHighlight: true
+        });
+
+    </script>
+
+    <script>
+        var TypeText = @Model.TypeText;
+        var TypeNumber = @Model.TypeNumber;
+        var TypeDate = @Model.TypeDate;
+        var TypeBoolean = @Model.TypeBoolean;
+          
+        var APIUrl = '@ViewData["APIURL"]';
+        var UserId = '@ViewData["UserId"]';
+
+        var SystemParamsDT;
+        var SystemParamsDataTable = function () {
+            var SystemParamsDataTableObj = function () {
+                SystemParamsDT = $('#SystemParamsDiv').KTDatatable({
+                    data: {
+                        type: 'remote',
+                        source: {
+                            read: {
+                                url: (APIUrl + 'Api/SystemParameters/All'),
+                                method: 'Get',
+                            }
+                        }
+                    }, 
+                    layout: {
+                        scroll: false, 
+                        footer: false  
+                    }, 
+                    sortable: true, 
+                    pagination: true, 
+                    search: {
+                        input: $('#SystemParamsSearch')
+                    }, 
+                    columns: [
+                        {
+                            field: 'Id',
+                            title: 'Id',
+                            sortable: false,
+                            width: 20,
+                            type: 'number',
+                            selector: { class: 'kt-checkbox--solid' },
+                            textAlign: 'center',
+                            visible: false
+
+                        }, {
+                            field: 'Name',
+                            title: 'Name',
+                             width: 250,
+                        }, {
+                            field: 'Value',
+                            title: 'Value',
+                             width: 250,
+                            template: function (row) {
+                                var resultHTML = '';
+                                 
+                                if (row.Type == TypeText) {
+                                    resultHTML = row.TextValue;
+                                } else if (row.Type == TypeNumber) {
+                                    resultHTML = row.DecimalValue;
+                                } else if (row.Type == TypeDate) {
+                                    resultHTML = row.DateValue.replace('T00:00:00', '').trim();;
+                                } else if (row.Type == TypeBoolean) {
+                                    resultHTML = row.BoolValue.toString();
+                                }
+                                return resultHTML;
+                            },
+                        }, {
+                            field: 'Actions',
+                            title: 'Actions',
+                            sortable: false, 
+                            width: 250,
+                            template: function (row) {
+                                var resultHTML = '<div class="dropdown">';
+                                resultHTML += '<a data-toggle="modal" data-target="#editor-modal" data-row-id=' + row.Id + ' class="btn btn-sm btn-clean btn-icon btn-icon-md show-row-data" title="Edit details">\
+                                                        <i class="la la-edit"></i>\
+                                                    </a>';
+                                return resultHTML;
+                            },
+                        }],
+                });
+            };
+
+            return {
+                // public functions
+                init: function () {
+                    SystemParamsDataTableObj();
+                }
+            };
+        }();
+
+        jQuery(document).ready(function () {
+            SystemParamsDataTable.init();
+
+            $("#SystemParamsDiv").on("click", ".show-row-data", function (e) {
+                EditSystemParameter($(this).data("row-id"))
+            })
+        });
+
+        function onSubmitSystemParameter() {
+            $('#valueValidator').hide();
+            var $modal = $('#editor-modal')
+            var Id;
+            if ($('#txtId').val() == "")
+                Id = 0;
+            else
+                Id = $('#txtId').val();
+            var valid = true;
+            var textValue, numericValue = 0, dateValue;
+            var type = parseInt($('#lblTypeId').val());
+             
+
+            if (type == TypeText) {
+                textValue = $('#txtTextValue').val();
+                if ($.trim(textValue) == '') {
+                    $('#valueValidator').show();
+                    valid = false;
+                }
+            }
+            else if (type == TypeNumber) {
+                var numericValueText = $('#txtNumericValue').val();
+                if ($.trim(numericValueText) == '') {
+                    $('#valueValidator').show();
+                    valid = false;
+                } else
+                    numericValue = parseFloat(numericValueText).toFixed(2);
+            } else if (type == TypeDate) {
+                dateValue = $('#dtpDateValue').val();
+                if ($.trim(dateValue) == '') {
+                    $('#valueValidator').show();
+                    valid = false;
+                }
+            }
+
+                                   
+            if (!valid)
+                return false;
+            var parameter = new Object();
+            parameter.Id = parseInt(Id);
+            if (type == TypeText) {
+                parameter.TextValue = $('#txtTextValue').val();
+            }
+            else if (type == TypeNumber) {
+                parameter.DecimalValue = $('#txtNumericValue').val();
+
+            } else if (type == TypeDate) {
+                var convertedDate;
+                var date = $('#dtpDateValue').val();
+                if (date != null && date.trim() != '') {
+                    var from = date.split("/")
+                    convertedDate = from[2] + '/' + from[1] + '/' + from[0];
+                }
+                else
+                    convertedDate = null;
+                parameter.DateValue = convertedDate;
+            } else if (type == TypeBoolean) {
+                parameter.BoolValue = $('#chkBoolValue').is(":checked");
+            }
+            
+            
+
+            SaveSystemParameter(parameter);
+        }
+
+        function SaveSystemParameter(Parameter) {
+            var $modal = $('#editor-modal')
+            var url = (APIUrl + 'Api/SystemParameters');
+            $.ajax({
+                type: "Put",
+                url: url,
+                data: JSON.stringify(Parameter),
+                contentType: "application/json",
+                success: function (msg) {
+                    SystemParamsDT.reload();
+                    $modal.modal('hide');
+
+                },
+                error: function (request, status, error) {
+                    AlertSwalError("Error", 'An Error has occured, please try again')
+                }
+            });
+            return false;
+        }
+
+        function EditSystemParameter(SystemParameterId) {
+            ClearControls();
+            $('#exampleModalLongTitle').text('Edit System Parameter')
+            $.ajax({
+                type: "GET",
+                url: (APIUrl + 'api/SystemParameters?SystemParameterId=' + SystemParameterId),
+                dataType: "text",
+                success: function (data) {
+                    
+
+                    var result = $.parseJSON(data);
+                    document.getElementById('txtId').value = result.Id
+                    $('#lblTypeId').val(result.Type);
+                    $('#lblName').html(result.Name);
+                    if (result.Type == TypeText) {
+                        $('#txtTextValue').show();
+                        $('#txtTextValue').val(result.TextValue);
+                        $('#txtNumericValue').hide();
+                        $('#dtpDateValueContainer').hide();
+                        $('#chkBoolValueContainer').hide();
+                    }
+                    else if (result.Type == TypeNumber) {
+                        $('#txtTextValue').hide();
+                        $('#txtNumericValue').show();
+                        $('#txtNumericValue').val(result.DecimalValue);
+                        $('#dtpDateValueContainer').hide();
+                        $('#chkBoolValueContainer').hide();
+                    }
+                    else if (result.Type == TypeDate) {
+                        $('#txtTextValue').hide();
+                        $('#txtNumericValue').hide();
+                        $('#dtpDateValueContainer').show();
+                        $('#dtpDateValue').val(result.DateValue);
+                        $('#chkBoolValueContainer').hide();
+                    }
+                    else if (result.Type == TypeBoolean) {
+                        $('#txtTextValue').hide();
+                        $('#txtNumericValue').hide();
+                        $('#dtpDateValueContainer').hide();
+                        $('#chkBoolValue').attr('checked', result.BoolValue);
+                        $('#chkBoolValueContainer').show();
+                    }
+                },
+                error: function (request, status, error) {
+                    AlertSwalError("Error", 'An Error has occured, please try again')
+                }
+            });
+
+        }
+
+        function ClearControls() {
+            $('#txtTextValue').val('');
+            $('#txtNumericValue').val('');
+            $('#txtId').val('');
+            $('#dtpDateValue').val('');
+            $('#chkBoolValue').val('');
+        }
+
+        $('.btnCloseModal').click(function () { ClearControls(); })
+
+    </script>
+
+}

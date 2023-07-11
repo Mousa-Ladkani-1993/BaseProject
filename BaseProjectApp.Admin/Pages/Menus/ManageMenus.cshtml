@@ -1,0 +1,104 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.Menus.ManageMenusModel
+
+@{
+    ViewData["Title"] = "Manage Menus";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .ui-autocomplete {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: default;
+        z-index: 9050 !important;
+    }
+
+    th {
+        white-space: nowrap;
+    }
+
+</style>
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon-list"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Menus
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        <a href="ManageMenu" class="btn btn-brand btn-elevate btn-icon-sm">
+                            <i class="la la-plus"></i>
+                            New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body">
+
+
+
+            @*kt-margin-t-20*@
+            <div class="kt-form kt-form--label-right  kt-margin-b-10">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 order-2 order-xl-1">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                <div class="kt-input-icon kt-input-icon--left">
+                                    <input id="SearchTerm" placeholder='Search' autocomplete="off" class="form-control" />
+                                    <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                        <span><i class="la la-search"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 order-1 order-xl-2 kt-align-right" style="display: none;">
+                        <a href="#" class="btn btn-default kt-hidden">
+                            <i class="la la-plus"></i>New
+                        </a>
+
+                        <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg d-xl-none"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="MenusDiv"></div>
+        </div>
+    </div>
+
+
+</div>
+
+@section Scripts{
+
+
+<script>
+
+    var APIUrl = '@ViewData["APIURL"]';
+    var UserId = '@ViewData["UserId"]';
+
+
+    const canEdit = @Model.canEdit;
+    const canAdd = @Model.canAdd;
+    const canView = @Model.canView;
+    const canDelete = @Model.canDelete;
+
+
+    var SearchTerm = "";
+    var Status = -1;
+
+</script>
+
+<script src="~/js/Pages/Menus/ManageMenus.js"></script>
+}

@@ -1,0 +1,147 @@
+﻿@model Microsoft.AspNetCore.Html.HtmlString
+
+<div class="form-group files-dz-div">
+    <label class="col-sm-2 col-form-label label-name">Image</label>
+    <div class="col-sm-6">
+
+
+        <input type="hidden" class="media-id" value="0">
+        
+        
+        <div class="kt-dropzone dropzone files-dz" action="~">
+            <div class="kt-dropzone__msg dz-message needsclick">
+                <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+            </div>
+        </div>
+        
+        
+        
+        <div class="form-group row show-file-div" style="padding-top: 3%; display: none;">
+            <div class="container">
+                <div class="row" style="margin-left: 0px;">
+                    <a href="#" class="change-file-btn" style="font-weight: bold">Change Image</a>
+                </div>
+                
+                <div class="row" style="padding-top: 10px; margin-left: 0px;">
+                    <img src="" class="img-file" style="max-width: 100%;" />
+                </div>
+            </div>
+        </div>
+
+    
+    
+    </div>
+    
+    
+    <div class="col-sm-2">
+        <a href="#" class="cancel-files-change-btn"  style="display: none;">Cancel</a>
+    </div>
+
+
+</div>
+
+
+<script>
+    
+    Dropzone.autoDiscover = false;
+    
+    function render(data) {
+
+        class FilesDz {
+
+            constructor(pid, mediaId, endpoint, apiUrl) {
+            
+                this.pid = pid;
+                this.mediaId = mediaId;
+                this.apiUrl = apiUrl;
+                this.files = [];
+                this.endpoint = endpoint;
+
+
+                this.addDocReadyCb(this.initDropzone.bind(this));
+
+                if(this.mediaId > 0) {
+                    this.loadFile();
+                }
+
+            }
+
+            addDocReadyCb(fn, isAsync=false, args=[]) {
+                
+                !isAsync ? $(document).ready(() => fn(...args)) : $(document).ready(async () => await fn(...args));
+            }
+
+            addListenerCb(selector, eventName, fn, args=[]) {
+                this.addDocReadyCb(() => $(`#${this.pid} ${selector}`).on(eventName, (e) => fn(e, ...args)));
+            }
+
+            setupListener() {
+                this.addListenerCb('.cancel-files-change-btn', 'click', this.onCancelFilesChange.bind(this));
+                this.addListenerCb('.change-file-btn', 'click', this.onCancelFilesChange.bind(this));
+                
+                
+            }
+
+
+            initDropzone(acceptedFiles='.') {
+                const onAddFiles = (files) => this.files = files;
+                
+                $(`#${this.pid} .files-dz`).dropzone({
+                    autoProcessQueue: false,
+                    acceptedFiles: acceptedFiles,
+                    init: function() {
+                        this.on('addedfiles', function(files) { 
+
+                         if (this.files[0].size  < MaxUploadedFileSizeB)  
+                             onAddFiles(this.files) 
+                              
+                        });
+                    },
+                });
+            }
+
+            onCancelFilesChange() {
+
+                $(`${this.pid} .show-file-div`).show();
+                $(`${this.pid} .files-dz`).hide();
+
+            }
+
+            onChangeFiles() {
+
+                $(`${this.pid} .show-file-div`).hide();
+                $(`${this.pid} .files-dz`).show();
+                
+            }
+
+            loadFile() {
+
+                $.ajax({
+                    method: 'GET',
+                    url: `${this.apiUrl}${this.endpoint}`,
+                    dataType: 'json',
+                    success: (res) => {
+
+                        $(`${this.pid} .show-file-div`).show();
+                        $(`${this.pid} .files-dz`).hide();
+
+                        $(`#${this.pid} .media-id`).val(res.Id);
+                        $(`#${this.pid} .img-file`).prop('src', res.FilePath);
+                    },
+                    error: (err) => {
+                        console.log(err);
+                    },
+                });
+
+
+            }
+
+        }
+
+        @* const _ = new FilesDz(data.pid, data.mediaId, data.apiUrl); *@
+
+    }
+
+    render(@Model);
+
+</script>

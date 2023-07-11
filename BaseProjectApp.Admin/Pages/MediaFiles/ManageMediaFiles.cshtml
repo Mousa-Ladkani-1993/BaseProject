@@ -1,0 +1,1080 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.MediaFiles.ManageMediaFilesModel
+
+@{
+    ViewData["Title"] = "Manage Media Files";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<div class="preloaderHolder" style="display:none">
+    <img src="~/assets/media/icons/loader.gif" class="imgloader" />
+</div>
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="row">
+        <div class="kt-portlet">
+            <div class="kt-portlet__head">
+                <div class="kt-portlet__head-label">
+                    <h3 class="kt-portlet__head-title">
+                        Media Files
+                    </h3>
+                </div>
+                <div class="kt-portlet__head-toolbar">
+                    <ul class="nav nav-pills" role="tablist">
+                        <li class="nav-item ">
+                            <a class="nav-link active" data-toggle="tab" href="#TableView"><i class="la la-info"></i>Table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#GalleryView"><i class="la la-image"></i>Gallery</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="kt-form">
+                <div class="kt-portlet__body">
+                    <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
+                        <div class="row align-items-center">
+                            <div class="col-xl-8 order-2 order-xl-1">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                        <div class="kt-input-icon kt-input-icon--left">
+                                            <input type="text" class="form-control" placeholder="Search..." id="txtImagesSearch" runat="server" clientidmode="Static" />
+                                            <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                                <span><i class="la la-search"></i></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4" style="display: block">
+                                        <label class="col-form-label" style="display: inline-block">Type :</label>
+                                        <select class="form-control kt-select2-NoSearch" id="ddlSearchMediaType" style="width: 80%; display: inline-block">
+                                            <option value="0">All</option>
+                                            <option value="1">Image</option>
+                                            <option value="2">Video</option>
+                                            <option value="3">File</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                        @if (@Model._permObj.canAdd)
+                                        {
+                                            <a id="btnAddImage" runat="server" href="#" class="btn btn-brand btn-elevate btn-icon-sm" onclick="openNewModal()">
+                                                <i class="la la-plus"></i>
+                                                Add Media File
+                                            </a>
+                                        }
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tab-content" id="allImages">
+                        <div class="tab-pane active" id="TableView" role="tabpanel" runat="server" clientidmode="static">
+                            <div style="margin-top: 20px;">
+                                <div class="kt-portlet__body kt-portlet__body--fit" style="border: 1px solid #ebedf2;">
+                                    <div id="dtTableImages"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane " id="GalleryView" role="tabpanel" runat="server" clientidmode="static">
+                            <div data-title="Landscape" class="t">
+                                <hr />
+                                <div class="galleryContent row">
+                                </div>
+                                <hr />
+                                <div class="kt-pagination kt-pagination--brand">
+                                    <ul class="kt-pagination__links" id="pagination"></ul>
+
+                                    <div class="kt-pagination__toolbar" style="width: 25%;">
+                                        <select id="DropDownList1" style="width: 20%;" class="form-control kt-font-brand" onchange="onChangePageCount(this);">
+                                            <option value="10">10</option>
+                                            <option value="20">20</option>
+                                            <option value="30">30</option>
+                                            <option value="50">50</option>
+                                            <option value="100">100</option>
+                                        </select>
+                                        <span id="showingPager">
+                                            Showing
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@*Media Files Modal*@
+@*<div class="modal fade" id="modal-images" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-content">
+    <div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLongTitle">File / Image Details</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+    </button>
+    </div>
+    <div class="modal-body">
+    <div id="editor-form">
+    <asp:Panel ID="pnlImageModal" runat="server">
+    <div class="form-group row" style="display: none">
+    <label class="col-lg-3 col-form-label">Id</label>
+    <div class="col-lg-8">
+    <input type="text" id="txtMediaId" class="form-control" style="display: none;" />
+    </div>
+    </div>
+
+    <div class="form-group row">
+    <label class="col-lg-3 col-form-label">Type</label>
+    <div class="col-lg-8">
+    <select id="ddlMediaType" class="form-control " Width="100%" onchange="onChangeMediaType(this);">
+    <option value="1">Image</option>
+    <option value="2">Video</option>
+    <option value="3">File</option>
+    </select>
+    </div>
+    </div>
+
+    <div class="form-group row" id="chkMainImageMediaFiles" style="">
+    <label class="col-lg-3 col-form-label">Main Image</label>
+    <div class="col-lg-8" style="margin-top: 10px">
+    <input type="checkbox" id="chkMainImage" />
+    </div>
+    </div>
+
+    <div class="form-group row">
+    <label class="col-lg-3 col-form-label">Caption</label>
+    <div class="col-lg-8">
+    <input type="text" id="txtImageCaptionEn" class="form-control" onkeydown="clearCaptionValidation()" style="width: 100%;" />
+    <span class="error invalid-feedback" id="captionValidator">Please enter a caption!!</span>
+    </div>
+    </div>
+
+    <div class="form-group row">
+    <label class="col-lg-3 col-form-label">Display Order</label>
+    <div class="col-lg-8">
+    <input type="text" id="txtDisplayOrder" class="form-control" onkeydown="return IsNumberKey(event);" style="width: 100%;" />
+    </div>
+    </div>
+
+    <div class="form-group row" id="txtVideoLinkMediaFiles" style="display: none;">
+    <label class="col-lg-3 col-form-label">Video Link</label>
+    <div class="col-lg-8">
+    <input type="text" id="txtYoutubePath" class="form-control" onkeydown="clearVideoValidation()" style="width: 100%;" />
+    <span class="error invalid-feedback" id="videoValidator">Please enter a video link!!</span>
+    </div>
+    </div>
+
+    <div class="form-group row">
+    <label class="col-lg-3 col-form-label">Files</label>
+    <div class="col-lg-8">
+    <ul class="nav nav-tabs  nav-tabs-line" role="tablist">
+    <li class="nav-item">
+    <a class="nav-link active" data-toggle="tab" href="#kt_tabs_2_1" role="tab" onclick="clearSelectedFilesList()">Upload Files</a>
+    </li>
+    <li class="nav-item">
+    <a class="nav-link" data-toggle="tab" href="#kt_tabs_2_2" role="tab" onclick="clearDropedFilesList()">Select Files</a>
+    </li>
+    </ul>
+    <div class="tab-content">
+    <div class="tab-pane active" id="kt_tabs_2_1" role="tabpanel">
+    <div class="kt-dropzone dropzone" action="~" id="imageUploadDZ">
+    <div class="kt-dropzone__msg dz-message needsclick">
+    <h3 class="kt-dropzone__msg-title">Drop files here or click to upload.</h3>
+    </div>
+    </div>
+    </div>
+    <div class="tab-pane" id="kt_tabs_2_2" role="tabpanel">
+    <select class="form-control select2-withImages" multiple="multiple" id="selectFile" style="width: 100%; display: inline-block">
+    </select>
+    </div>
+    </div>
+
+    <span class="error invalid-feedback" id="FileValidator">Please enter a correct file extension!!</span>
+    <span class="error invalid-feedback" id="uploadValidator">Please select a file or upload one!!</span>
+    </div>
+    </div>
+    </asp:Panel>
+    </div>
+    <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+    <a href="#" id="btnSaveNewFile" onclick="saveNewFile()" class="btn btn-primary">Save File</a>
+    <a href="#" id="btnUpdateFile" onclick="updateFile()" class="btn btn-primary">Save</a>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>*@
+<div id="media-file-p1"></div>
+@section Scripts{
+
+<style media="screen">
+    .t img {
+        max-height: 85%;
+        vertical-align: middle;
+        cursor: default;
+        max-width: 100%;
+    }
+
+        .t img:hover {
+            cursor: pointer;
+        }
+
+    div.polaroid {
+        margin-bottom: 20px;
+    }
+
+    div.innerpolaroid {
+        padding: 30px 15px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        background-color: white;
+        height: 300px;
+        transition: box-shadow 0.3s linear;
+    }
+
+        div.innerpolaroid:hover {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.3), 0 6px 20px 0 rgba(0, 0, 0, 0.29);
+            transition: box-shadow 0.3s linear;
+        }
+
+    div.detailscontainer {
+        text-align: center;
+    }
+
+    div.imgCover {
+        height: 68%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<style type="text/css">
+    .select2-result-repository {
+        padding-top: 4px;
+        padding-bottom: 3px;
+    }
+
+    .select2-result-repository__avatar {
+        width: 60px;
+        margin-right: 10px;
+        float: left;
+    }
+
+        .select2-result-repository__avatar img {
+            border-radius: 2px;
+            width: 100%;
+            height: auto;
+        }
+
+    .select2-result-repository__meta {
+        margin-left: 70px;
+    }
+
+    .select2-result-repository__title {
+        color: black;
+        line-height: 1.1;
+        font-weight: bold;
+        margin-bottom: 4px;
+        -ms-word-wrap: break-word;
+    }
+
+    .select2-result-repository__forks {
+        margin-right: 1em;
+    }
+
+    .select2-result-repository__stargazers {
+        margin-right: 1em;
+    }
+
+    .select2-result-repository__forks {
+        color: rgb(170, 170, 170);
+        font-size: 11px;
+        display: inline-block;
+    }
+
+    .select2-result-repository__stargazers {
+        color: rgb(170, 170, 170);
+        font-size: 11px;
+        display: inline-block;
+    }
+
+    .select2-result-repository__watchers {
+        color: rgb(170, 170, 170);
+        font-size: 11px;
+        display: inline-block;
+    }
+
+    .select2-result-repository__description {
+        color: rgb(119, 119, 119);
+        font-size: 13px;
+        margin-top: 4px;
+    }
+
+    .select2-results__option--highlighted .select2-result-repository__title {
+        color: black;
+    }
+
+    .select2-results__option--highlighted .select2-result-repository__description {
+        color: black;
+    }
+</style>
+
+<style>
+    .page-item.active .page-link {
+        z-index: 1;
+        color: #fff;
+        background-color: #5d78ff;
+        border-color: #5d78ff;
+        border-radius: 3px;
+    }
+
+    .kt-pagination .kt-pagination__links li a {
+        color: #93a2dd;
+        border: none;
+    }
+
+    .kt-datatable > .kt-datatable__pager > .kt-datatable__pager-nav > li > .kt-datatable__pager-link:hover {
+        transition: all 0.3s;
+        background: #5d78ff;
+        color: #ffffff;
+    }
+
+    .page-link:hover {
+        z-index: 2;
+        color: #2739c1;
+        text-decoration: none;
+        background-color: #5d78ff;
+        border-color: #ebedf2;
+        border-radius: 3px;
+    }
+</style>
+
+<script>
+    var APIUrl = '@ViewData["APIURL"]';
+    var UserId = '@ViewData["UserId"]';
+
+    //Dropzone.autoDiscover = false;
+    //var toUploadFile = null;
+    var galleryData = null;
+    var PageSize = 10;
+
+    jQuery(document).ready(function () {
+        KTDatatableImages.init(null, null);
+
+        //$('.kt-select2-NoSearch').select2({
+        //    placeholder: "Select",
+        //    minimumResultsForSearch: Infinity
+        //});
+
+        $('#txtImagesSearch').keyup(function () {
+            var searchText = $(this).val();
+            var selectedType = $('#ddlSearchMediaType').val();
+            if (selectedType == 0)
+                selectedType = null;
+            if (dtImages != null)
+                dtImages.destroy();
+            KTDatatableImages.init(searchText, selectedType);
+        })
+
+        $('#ddlSearchMediaType').change(function () {
+            var selectedType = $(this).val();
+            if (selectedType == 0)
+                selectedType = null;
+            var searchText = $('#txtImagesSearch').val();
+            if (dtImages != null)
+                dtImages.destroy();
+            KTDatatableImages.init(searchText, selectedType);
+        });
+
+        //$("#imageUploadDZ").dropzone({
+        //    autoProcessQueue: false,
+        //    acceptedFiles: 'image/*',
+        //    accept: function (file, done) {
+        //        done();
+        //    },
+        //    init: function () {
+        //        this.on("addedfile", function () {
+        //            toUploadFile = this.files;
+        //        });
+        //    }
+        //});
+
+        //$(".select2-withImages").select2({
+        //    placeholder: 'Search',
+        //    allowClear: true,
+        //    ajax: {
+        //        url: APIUrl + 'Api/MediaFile/FilterMediaFiles',
+        //        dataType: 'json',
+        //        delay: 250,
+        //        data: function (params) {
+        //            var queryParameters = {
+        //                Name: params.term,
+        //                TypeId: null
+        //            }
+        //            return queryParameters;
+        //        },
+        //        processResults: function (data, params) {
+        //            params.page = params.page || 1;
+
+        //            return {
+        //                results: $.map(data, function (item) {
+        //                    return {
+        //                        text: item.text,
+        //                        id: item.Id,
+        //                        FilePath: item.FilePath,
+        //                        CaptionEn: item.CaptionEn
+        //                    }
+        //                })
+        //            };
+        //        },
+        //        cache: true
+        //    },
+        //    escapeMarkup: function (markup) { return markup; },
+        //    minimumInputLength: 1,
+        //    templateResult: formatRepo,
+        //    templateSelection: formatRepoSelection
+        //});
+
+        $(function () {
+            $('#pagination').twbsPagination({
+                totalPages: 40,
+                visiblePages: 5,
+                onPageClick: function (event, page) {
+                    loadGallery(galleryData, page, PageSize);
+                }
+            }).on('page', function (event, page) {
+
+            });
+            rxjs.fromEvent(window, 'media-file-p1_save-done').subscribe((res) => {
+                if (res.detail.success) {
+                    dtImages.reload();
+                }
+            });
+        });
+
+    });
+
+    //function formatRepo(repo) {
+    //    if (repo.loading) return repo.text;
+    //    var markup = "<div class='select2-result-repository clearfix'>" +
+    //        "<div class='select2-result-repository__avatar'><img src='" + repo.FilePath + "' /></div>" +
+    //        "<div class='select2-result-repository__meta'>" +
+    //        "<div class='select2-result-repository__title'>" + repo.CaptionEn + "</div>";
+    //    if (repo.CaptionEn) {
+    //        markup += "<div class='select2-result-repository__description'>" + repo.CaptionEn + "</div>";
+    //    }
+    //    return markup;
+    //}
+
+    //function formatRepoSelection(repo) {
+    //    return repo.CaptionEn || repo.text;
+    //}
+
+    var dtImages;
+    var KTDatatableImages = function () {
+        var KTDatatableImagesObj = function (Name, TypeId) {
+            dtImages = $('#dtTableImages').KTDatatable({
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: (APIUrl + 'Api/MediaFile/FilterMediaFiles'),
+                            method: 'GET',
+                            params: {
+                                'Name': Name,
+                                'TypeId': TypeId
+                            }
+                        }
+                    }
+                },
+                layout: {
+                    scroll: false,
+                    footer: false
+                },
+                sortable: true,
+                pagination: true,
+                columns: [
+                    {
+                        field: 'Id',
+                        title: 'Id',
+                        type: 'number',
+                        textAlign: 'left',
+                        responsive: { hidden: 'xl' },
+                    },
+                    {
+                        field: 'TypeId',
+                        title: 'Type',
+                        width: 60,
+                        textAlign: 'left',
+                        template: function (row) {
+                            if (row.TypeId == '3')
+                                return 'File';
+                            else if (row.TypeId == '2')
+                                return 'Video';
+                            else
+                                return 'Image';
+                        }
+                    },
+                    {
+                        field: 'CaptionEn',
+                        title: 'Caption',
+                        textAlign: 'left',
+                    },
+                    {
+                        field: 'YouTubePath',
+                        title: 'Video Link',
+                        textAlign: 'left',
+                        template: function (row) {
+                            if (row.YouTubePath != "" && row.YouTubePath != null)
+                                return '<a href="#" data-row-id=' + row.YouTubePath + ' class="btn btn-outline-brand btn-icon"><i class="fa fa-eye"></i></a>';
+                            else
+                                return '';
+                        },
+                    },
+                    {
+                        field: 'DisplayOrder',
+                        title: 'Display Order',
+                        textAlign: 'left',
+                    },
+                    {
+                        field: 'MainImage',
+                        title: 'Main Image',
+                        textAlign: 'left',
+                        template: function (row) {
+                            if (row.MainImage == true)
+                                return 'Yes';
+                            else
+                                return 'No';
+                        }
+                    },
+                    {
+                        field: 'FilePath',
+                        title: 'File / Image',
+                        textAlign: 'left',
+                        template: function (row) {
+
+                            if(row.FilePath == null || row.FilePath == '')
+                            {
+                              return '';
+                            }
+
+                            if (row.TypeId == '3')
+                                return '<a href="#" data-row-id=' + row.FilePath + ' class="files"><img src="assets/images/file.png" width="40" height="40"/></a>';
+                            else
+                            {   
+                                if(row.FilePath == '')
+                                {
+                                    return '';
+                                }
+                                else
+                                {
+                                 return '<img class="Modal-small-img" style="object-fit: contain;" alt="'+row.CaptionEn+'" src="' + row.FilePath + '" width="40" height="40"/>'
+                                }
+                                    //if (isExistImgURL(row.FilePath))
+                                    //          { return '<img class="Modal-small-img" style="object-fit: contain;" alt="'+row.CaptionEn+'" src="' + row.FilePath + '" width="40" height="40"/>';}
+                                    //          else
+                                    //          { return '<img style="object-fit: contain;" title="broken link" alt="'+row.CaptionEn+'" src="../broken.png" width="32" height="32"/>';}
+
+                            };
+                        },
+                    },
+                    {
+                        field: 'Actions',
+                        title: 'Actions',
+                        sortable: false,
+                        autoHide: false,
+                        overflow: 'visible',
+                        template: function (row) {
+                            let htmlStr = '<div class="dropdown">';
+
+                            @if (@Model._permObj.canEdit)
+                            {
+                                <text>
+                                    htmlStr += `
+                                    <a  data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-row-data" title="Edit details">
+                                        <i class="la la-edit"></i>
+                                    </a>`;
+                                </text>
+                            }
+
+                            @if (@Model._permObj.canEdit == false && @Model._permObj.canView)
+                            {
+                                <text>
+                                    htmlStr += `
+                                    <a  data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-row-data" title="Edit details">
+                                        <i class="la la-eye"></i>
+                                    </a>`;
+                                </text>
+                            }
+
+                            @if (@Model._permObj.canDelete)
+                            {
+                                <text>
+                                    htmlStr += `
+                                    <a  data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-delete-data" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>`;
+                                </text>
+                            }
+                            return htmlStr;
+                        },
+                    }],
+            });
+        };
+        return {
+            init: function (Name, TypeId) {
+                KTDatatableImagesObj(Name, TypeId);
+                $('#dtTableImages').on('kt-datatable--on-ajax-done', function (event, data) {
+                    galleryData = data;
+                    loadGallery(data, 1, 10);
+                    initPagination(data);
+                });
+                $("#dtTableImages").on("click", ".btn-outline-brand", function (e) {
+                    var url = $(this).data("row-id");
+                    var win = window.open(url, '_blank');
+                    win.focus();
+                })
+                $("#dtTableImages").on("click", ".files", function (e) {
+                    var url = $(this).data("row-id");
+                    var win = window.open(url, '_blank');
+                    win.focus();
+                })
+                $('#allImages').off("click", ".show-row-data");
+                $("#allImages").on("click", ".show-row-data", function (e) {
+                    loadMediafilesModal('media-file-p1', 0, 'None', $(this).data("row-id"));
+
+                    //EditImage($(this).data("row-id"))
+                })
+                $('#allImages').off("click", ".show-delete-data");
+                $("#allImages").on("click", ".show-delete-data", function (e) {
+                    DeleteFile($(this).data("row-id"))
+                });
+
+            }
+        };
+    }();
+
+    function onChangePageCount(selected) {
+        PageSize = selected.value;
+        var totalPages = Math.ceil(galleryData.length / PageSize);
+        $('#pagination').twbsPagination("changeTotalPages", totalPages, 1);
+
+        document.getElementById('showingPager').innerText = "Showing 1 - " + PageSize + " of " + galleryData.length;
+
+        loadGallery(galleryData, 1, selected.value);
+    }
+
+    function initPagination(allData) {
+        var totalPages = Math.ceil(allData.length / 10);
+        $('#pagination').twbsPagination("changeTotalPages", totalPages, 1);
+
+        document.getElementById('showingPager').innerText = "Showing 1 - 10 of " + allData.length;
+    }
+
+    function loadGallery(allData, pageNum, pageSize) {
+        if (allData != null) {
+            const skip = parseInt((pageNum - 1) * pageSize);
+            const take = parseInt(pageSize);
+
+            document.getElementById('showingPager').innerText = "Showing " + (skip + 1) + " - " + (skip + take) + " of " + allData.length;
+
+            var data = allData.slice(skip, skip + take);
+            $(".galleryContent").html("");
+            for (var i = 0; i < data.length; i++) {
+                var mediaPath = data[i].FilePath;
+                var youtubePath = data[i].YouTubePath;
+                var title = data[i].CaptionEn;
+                var id = data[i].Id;
+                var buttons = "";
+                var fileType = "";
+                var moduleType = "";
+
+                if (data[i].TypeId == 1)
+                    fileType = "Image";
+                else if (data[i].TypeId == 2)
+                    fileType = "Video";
+                else
+                    fileType = "File";
+
+                if (data[i].RecordId != null)
+                    moduleType = "Content Record";
+                else if (data[i].CategoryId != null)
+                    moduleType = "Category";
+                else if (data[i].SliderId != null)
+                    moduleType = "Slider";
+
+                buttons += '<a  data-row-id=' + id + ' class="btn btn-sm btn-clean btn-icon btn-icon-md show-row-data" title="Edit details">\
+                                                        <i class="la la-edit"></i></a>\
+                                                        <a  data-row-id=' + id + ' class="btn btn-sm btn-clean btn-icon btn-icon-md show-delete-data" title="Delete">\
+                                                        <i class="la la-trash"></i></a>';
+
+                if (data[i].TypeId == 3)
+                    $(".galleryContent").append('<div class="alb_item col-md-3 polaroid"><div class="innerpolaroid"><div class="imgCover"><a target="_blank" href= "' + mediaPath + '" style="height:100%;"><img src="assets/images/file.png" /></a> </div> <div class="detailscontainer"><a href="' + mediaPath + '" download><h5 style="margin-bottom:-6%;margin-top: 2%;">' + title + '</h5></a><br/><h6 style="margin-bottom:-8%;">' + fileType + '</h6><br/><h6 style="margin-bottom:-3%;">' + moduleType + '</h6><hr style="margin-bottom:0;"/>' + buttons + '</div></div> </div>');
+                else {
+                    if (youtubePath != null && youtubePath.trim() != "")
+                        $(".galleryContent").append('<div class="alb_item col-md-3 polaroid"><div class="innerpolaroid"><div class="imgCover"><a target="_blank" href= "' + youtubePath + '" style="height:100%;"><img src="' + mediaPath + '" /></a> </div><div class="detailscontainer"><a href="' + youtubePath + '" target="_blank"><h5 style="margin-bottom:-6%;margin-top: 2%;">' + title + '</h5></a><br/><h6 style="margin-bottom:-8%;">' + fileType + '</h6><br/><h6 style="margin-bottom:-3%;">' + moduleType + '</h6><hr style="margin-bottom:0;"/>' + buttons + '</div></div> </div > ');
+                    else
+                        $(".galleryContent").append('<div class="alb_item col-md-3 polaroid"><div class="innerpolaroid"><div class="imgCover"><a target="_blank" href= "' + mediaPath + '" style="height:100%;"><img src="' + mediaPath + '" /></a> </div> <div class="detailscontainer"><a href="' + mediaPath + '" download><h5 style="margin-bottom:-6%;margin-top: 2%;">' + title + '</h5></a><br/><h6 style="margin-bottom:-8%;">' + fileType + '</h6><br/><h6 style="margin-bottom:-3%;">' + moduleType + '</h6><hr style="margin-bottom:0;"/>' + buttons + '</div></div> </div>');
+                }
+            }
+        }
+
+        //$('body').ALightBox({
+        //    showYoutubeThumbnails: true
+        //});
+    }
+
+    //function EditImage(id) {
+    //    $('#exampleModalLongTitle').text('Edit Image')
+
+    //    $.ajax({
+    //        type: "GET",
+    //        url: (APIUrl + 'Api/MediaFile/Get?id=' + id),
+    //        dataType: "text",
+    //        success: function (data) {
+    //            var result = $.parseJSON(data);
+    //            $('#ddlMediaType').val(result.TypeId).trigger('change');
+    //            $('#ddlMediaType').prop('disabled', 'disabled');
+    //            document.getElementById('txtMediaId').value = result.Id;
+    //            document.getElementById('txtImageCaptionEn').value = result.CaptionEn;
+    //            document.getElementById('txtDisplayOrder').value = result.DisplayOrder;
+    //            document.getElementById('chkMainImage').checked = result.MainImage;
+    //            document.getElementById('txtYoutubePath').value = result.YouTubePath;
+    //            document.getElementById('btnSaveNewFile').style.display = "none";
+    //            document.getElementById('btnUpdateFile').style.display = "";
+
+    //            if (result.TypeId == 1) {
+    //                document.getElementById("chkMainImageMediaFiles").style.display = "";
+    //                document.getElementById("txtVideoLinkMediaFiles").style.display = "none";
+    //            }
+    //            else if (result.TypeId == 2) {
+    //                document.getElementById("chkMainImageMediaFiles").style.display = "none";
+    //                document.getElementById("txtVideoLinkMediaFiles").style.display = "";
+    //            }
+    //            else {
+    //                document.getElementById("chkMainImageMediaFiles").style.display = "none";
+    //                document.getElementById("txtVideoLinkMediaFiles").style.display = "none";
+    //            }
+    //        },
+    //        error: function (request, status, error) {
+    //            AlertSwalError("Error", 'An Error has occured, please try again')
+    //        }
+    //    });
+    //}
+
+    //function DeleteImage(id) {
+    //    $.ajax({
+    //        type: "POST",
+    //        url: (APIUrl + 'Api/MediaFile/Delete?id=' + id),
+    //        dataType: "text",
+    //        success: function (data) {
+
+    //            AlertSwalSucceeded('Deleted Successfully');
+    //            dtImages.reload()
+
+    //        },
+    //        error: function (request, status, error) {
+    //            AlertSwalError("Error", 'An Error has occured, please try again')
+    //        },
+
+    //    });
+    //}
+
+    function DeleteFile(id) {
+        rxjs.fromEvent(window, `${id}_file-delete-done`)
+            .pipe(rxjs.operators.take(1))
+            .subscribe((res) => {
+                if (res.detail.success) dtImages.reload();
+            });
+
+        deleteMediaFile(id);
+    }
+
+    function IsNumberKey(e) {
+        var key = e.keyCode;
+
+        if (key == 13 || key == 46 || key == 8 || key == 37 || key == 39 || key == 190 || key == 110 || (key > 95 && key < 106) || key == 9 || (key > 47 && key < 58))
+            return true;
+        else
+            return false;
+    }
+
+    //function clearCaptionValidation() {
+    //    $("#captionValidator").hide();
+    //}
+
+    //function clearVideoValidation() {
+    //    $("#videoValidator").hide();
+    //}
+
+    //function saveNewFile() {
+    //    if (validateFields(true)) {
+    //        var $modal = $('#modal-images');
+    //        var mediaId = document.getElementById('txtMediaId').value == "" ? "0" : document.getElementById('txtMediaId').value;
+    //        var ddlMediaType = document.getElementById("ddlMediaType");
+    //        var mediaType = ddlMediaType.options[ddlMediaType.selectedIndex].value;
+    //        var recordId = 0;
+    //        var caption = document.getElementById('txtImageCaptionEn').value;
+    //        var youTube = document.getElementById('txtYoutubePath').value;
+    //        var displayOrder = document.getElementById('txtDisplayOrder').value;
+    //        var mainImage = document.getElementById('chkMainImage').checked;
+    //        var type = "PrimaryMedia";
+
+    //        var fileUpload = toUploadFile;
+    //        var selectedFiles = $(".select2-withImages").select2('data');
+    //        if (fileUpload != null) {
+
+    //            var data = new FormData();
+    //            for (var i = 0; i < fileUpload.length; i++) {
+    //                data.append("files", fileUpload[i]);
+    //            }
+
+    //            var url = APIUrl + 'Api/MediaFile/SaveFile?mediaId=' + mediaId + '&recordId=' + recordId + '&caption=' + caption + '&youTube=' + youTube + '&displayOrder=' + displayOrder + '&mainImage=' + mainImage + '&mediaType=' + mediaType + '&type=' + type;
+
+    //            ShowLoader();
+
+    //            $.ajax({
+    //                url: url,
+    //                type: "POST",
+    //                enctype: 'multipart/form-data',
+    //                data: data,
+    //                cache: false,
+    //                contentType: false,
+    //                processData: false,
+    //                success: function (result) {
+    //                    dtImages.reload();
+    //                    $modal.modal('hide');
+
+    //                    toUploadFile = null;
+    //                    Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //                    $(".select2-withImages").val("");
+    //                    $(".select2-withImages").trigger("change");
+
+    //                    HideLoader();
+    //                },
+
+    //            });
+    //        }
+    //        else if (selectedFiles != null) {
+    //            var listOfIds = '';
+    //            $.each(selectedFiles, function (index, item) {
+    //                listOfIds = listOfIds + item.id + '-';
+    //            });
+    //            var listOfFiles = new Object();
+    //            listOfFiles.Table = "";
+    //            listOfFiles.CaptionEn = caption;
+    //            listOfFiles.CaptionAr = caption;
+    //            listOfFiles.YoutubePath = youTube;
+    //            listOfFiles.DisplayOrder = displayOrder;
+    //            listOfFiles.RecordId = null;
+    //            listOfFiles.MainImage = mainImage;
+    //            listOfFiles.MediaType = mediaType;
+    //            listOfFiles.ListOfIds = listOfIds;
+
+    //            ShowLoader();
+
+    //            $.ajax({
+    //                url: APIUrl + 'Api/MediaFile/UploadSelectedCollection',
+    //                type: "POST",
+    //                data: listOfFiles,
+    //                success: function (result) {
+    //                    dtImages.reload();
+    //                    toUploadFile = null;
+    //                    Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //                    $(".select2-withImages").val("");
+    //                    $(".select2-withImages").trigger("change");
+    //                    $modal.modal('hide');
+
+    //                    HideLoader();
+    //                },
+
+    //            });
+    //        }
+    //    }
+    //}
+
+    //function updateFile() {
+    //    var $modal = $('#modal-images');
+    //    if (validateFields(false)) {
+    //        var $modal = $('#modal-images');
+    //        var mediaId = document.getElementById('txtMediaId').value == "" ? "0" : document.getElementById('txtMediaId').value;
+    //        var ddlMediaType = document.getElementById("ddlMediaType");
+    //        var mediaType = ddlMediaType.options[ddlMediaType.selectedIndex].value;
+    //        var recordId = 0;
+    //        var caption = document.getElementById('txtImageCaptionEn').value;
+    //        var youTube = document.getElementById('txtYoutubePath').value;
+    //        var displayOrder = document.getElementById('txtDisplayOrder').value;
+    //        var mainImage = document.getElementById('chkMainImage').checked;
+    //        var type = "PrimaryMedia";
+
+    //        var fileUpload = toUploadFile;
+    //        var selectedFiles = $(".select2-withImages").select2('data');
+    //        if (fileUpload != null) {
+
+    //            var data = new FormData();
+    //            for (var i = 0; i < fileUpload.length; i++) {
+    //                data.append("files", fileUpload[i]);
+    //            }
+
+    //            var url = APIUrl + 'Api/MediaFile/SaveFile?mediaId=' + mediaId + '&recordId=' + recordId + '&caption=' + caption + '&youTube=' + youTube + '&displayOrder=' + displayOrder + '&mainImage=' + mainImage + '&mediaType=' + mediaType + '&type=' + type;
+
+    //            ShowLoader();
+
+    //            $.ajax({
+    //                url: url,
+    //                type: "POST",
+    //                enctype: 'multipart/form-data',
+    //                data: data,
+    //                cache: false,
+    //                contentType: false,
+    //                processData: false,
+    //                success: function (result) {
+    //                    dtImages.reload();
+    //                    $modal.modal('hide');
+
+    //                    toUploadFile = null;
+    //                    Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //                    $(".select2-withImages").val("");
+    //                    $(".select2-withImages").trigger("change");
+
+    //                    HideLoader();
+    //                },
+
+    //            });
+    //        }
+    //        else if (selectedFiles != null) {
+    //            var listOfIds = '';
+    //            $.each(selectedFiles, function (index, item) {
+    //                listOfIds = listOfIds + item.id + '-';
+    //            });
+    //            var listOfFiles = new Object();
+    //            listOfFiles.Table = "";
+    //            listOfFiles.CaptionEn = caption;
+    //            listOfFiles.CaptionAr = caption;
+    //            listOfFiles.YoutubePath = youTube;
+    //            listOfFiles.DisplayOrder = displayOrder;
+    //            listOfFiles.RecordId = null;
+    //            listOfFiles.MainImage = mainImage;
+    //            listOfFiles.MediaType = mediaType;
+    //            listOfFiles.ListOfIds = listOfIds;
+
+    //            ShowLoader();
+
+    //            $.ajax({
+    //                url: APIUrl + 'Api/MediaFile/UploadSelectedCollection',
+    //                type: "POST",
+    //                data: listOfFiles,
+    //                success: function (result) {
+    //                    dtImages.reload();
+    //                    toUploadFile = null;
+    //                    Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //                    $(".select2-withImages").val("");
+    //                    $(".select2-withImages").trigger("change");
+    //                    $modal.modal('hide');
+
+    //                    HideLoader();
+    //                },
+
+    //            });
+    //        }
+    //    }
+    //}
+
+    //function validateFields(isUpload) {
+    //    var valid = true;
+    //    var mediaType = document.getElementById("ddlMediaType")
+    //    if (isUpload) {
+    //        var fileUpload = toUploadFile;
+    //        var selectedFiles = $(".select2-withImages").select2('data');
+    //        if ((fileUpload == null || fileUpload.length == 0) && (selectedFiles == null || selectedFiles.length == 0)) {
+    //            $("#uploadValidator").show();
+    //            valid = false;
+    //        } else if (fileUpload != null && fileUpload.length != 0) {
+    //            var AllowedExtensions = ['jpg', 'png', 'gif', 'bmp', 'jpeg'];
+    //            var isAllowedExtension = AllowedExtensions.indexOf(fileUpload[0].name.split('.').pop().toLowerCase());
+    //            if (mediaType == 1 && isAllowedExtension == -1) {
+    //                $("#FileValidator").show();
+    //                toUploadFile = null;
+    //                Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //                $(".select2-withImages").val("");
+    //                $(".select2-withImages").trigger("change");
+    //                valid = false;
+    //            }
+    //            else {
+    //                $("#FileValidator").hide();
+    //            }
+    //        }
+    //    }
+    //    if (document.getElementById('txtImageCaptionEn').value == "") {
+    //        $("#captionValidator").show();
+    //        valid = false;
+    //    }
+    //    if (mediaType == 2) {
+    //        if (document.getElementById('txtYoutubePath').value == "") {
+    //            $("#videoValidator").show();
+    //            valid = false;
+    //        }
+    //    }
+
+    //    return valid;
+    //}
+
+    function openNewModal() {
+        loadMediafilesModal('media-file-p1', 0, 'None', 0);
+        //clearFields();
+        //document.getElementById('btnSaveNewFile').style.display = "";
+        //document.getElementById('btnUpdateFile').style.display = "none";
+        //$('#ddlMediaType').prop('disabled', false);
+
+    }
+
+    //function clearFields() {
+    //    document.getElementById('txtImageCaptionEn').value = "";
+    //    document.getElementById('txtMediaId').value = "";
+    //    document.getElementById('txtYoutubePath').value = "";
+    //    document.getElementById('txtDisplayOrder').value = "";
+    //    document.getElementById('chkMainImage').checked = false;
+    //    Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //    $(".select2-withImages").val("");
+    //    $(".select2-withImages").trigger("change");
+    //    $("#uploadValidator").hide();
+    //}
+
+    //function clearSelectedFilesList() {
+    //    $(".select2-withImages").val("");
+    //    $(".select2-withImages").trigger("change");
+    //}
+
+    //function clearDropedFilesList() {
+    //    Dropzone.forElement('#imageUploadDZ').removeAllFiles(true);
+    //}
+
+    //function onChangeMediaType(selected) {
+    //    if (selected.value == 1) {
+    //        document.getElementById("chkMainImageMediaFiles").style.display = "";
+    //        document.getElementById("txtVideoLinkMediaFiles").style.display = "none";
+    //    }
+    //    else if (selected.value == 2) {
+    //        document.getElementById("chkMainImageMediaFiles").style.display = "none";
+    //        document.getElementById("txtVideoLinkMediaFiles").style.display = "";
+    //    }
+    //    else {
+    //        document.getElementById("chkMainImageMediaFiles").style.display = "none";
+    //        document.getElementById("txtVideoLinkMediaFiles").style.display = "none";
+    //    }
+    //}
+
+    function ShowLoader() {
+        $('.preloaderHolder').show();
+    }
+
+    function HideLoader() {
+        $('.preloaderHolder').hide();
+    }
+
+</script>
+
+}

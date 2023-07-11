@@ -1,0 +1,130 @@
+﻿@* generic utils *@
+<script>
+    async function swalConfirm(message) {
+        const res = await Swal.fire({
+            title: 'Alert',
+            text: message,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        });
+
+        if (res.value) return true;
+
+        else if (res.dismiss === Swal.DismissReason.cancel) return false;
+
+        return false;
+    }
+
+</script>
+
+
+
+@* media files utils *@
+<script>
+
+    function loadMediafilesModal(pid, recordId, type, mediaId = 0 , language = false) {
+        $.ajax({
+            method: 'GET', 
+            url: `../_Shared/_Shared?handler=LoadMediaFilesForm&pid=${pid}&recordId=${recordId}&type=${type}&mediaId=${mediaId}&language=${language}`,
+             success: (res) => {
+                $(`#${pid}`).html(res);
+                
+                $(`#${pid} .media-files-modal`).modal('show');
+            },
+            error: (err) => {
+                console.log(err);
+                alert('error while loading media files modal');
+            }
+        });
+    }
+
+    async function deleteMediaFile(id) {
+
+        const confirmDelete = await swalConfirm('Are you sure you want to Delete this File ?');
+
+        if (confirmDelete == false) {
+            window.dispatchEvent(new CustomEvent(`${id}_file-delete-done`, { detail: { success: false } }));
+            return;
+        }
+
+        var url = `${__apiUrl}Api/MediaFile/Delete?Id=${id}`;
+        $.ajax({
+            type: "POST",
+            url: url,
+            success: (res) => {
+                AlertSwalSucceeded('Deleted Successfully');
+                window.dispatchEvent(new CustomEvent(`${id}_file-delete-done`, { detail: { success: true } }));
+            },
+            error: (err) => {
+                AlertSwalError('Delete Failed');
+                window.dispatchEvent(new CustomEvent(`${id}_file-delete-done`, { detail: { success: false } }));
+            }
+        });
+
+        return false;
+    }
+
+
+
+</script>
+
+
+<script>
+
+    function setupSelecte2Ddl(selector, url, 
+        {
+            searchStr='searchQuery',
+            options={ tags:false, minimumInputLength:1, multiple: true, placeholder: 'search'},
+            queryParams={}, 
+            idKey='Id',
+            textKey='Text',
+            processCb=null,
+        }) 
+    {
+        const _options = { tags:false, minimumInputLength:0, multiple: true, placeholder: 'search'};
+        options = {..._options, ...options}
+        
+        $(selector).select2({
+            ...options,
+            ajax: {
+                url: url,
+                dataType: 'json',
+                delay: 250,
+                data: (params) => ({
+                    [searchStr]: params.term,
+                    ...queryParams
+                }),
+                processResults: (data, params) => {
+                    const items = processCb != null ? processCb(data, params) : data.map(item => ({ id: item[idKey], text: item[textKey] }) );
+                    return {
+                        results: items
+                    };
+                },
+                cache: true
+            },
+        });
+    }
+
+    function setSelect2SelectedOptions(selector, options=[]) {
+        const ddl = $(selector);
+        options.forEach(x => {
+            const option = new Option(x.text, x.id, true, true);
+            ddl.append(option).trigger('change');
+        });
+
+        // manually trigger the `select2:select` event
+        ddl.trigger({
+            type: 'select2:select',
+            params: {
+                data: options
+            }
+        });
+
+    }
+
+
+</script>

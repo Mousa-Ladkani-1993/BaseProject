@@ -1,0 +1,122 @@
+﻿
+.kt-widget.kt-widget--user-profile-3 .kt-widget__bottom .kt-widget__item {
+    padding: 0 !important;
+}
+
+.kt-widget.kt-widget--user-profile-3 .kt-widget__bottom {
+    border-bottom: 1px solid #ebedf2 !important;
+    border-top: 0 !important;
+    margin-bottom: 2rem !important;
+    margin-top: 0 !important;
+}
+
+#ctl00_MainContent_rdType label {
+    padding-left: 10px;
+    padding-right: 25px;
+}
+
+
+.RadAutoCompleteBox {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.RadAutoCompleteBox_MetroTouch .racTokenList {
+    height: calc(1.5em + 1.3rem + 2px) !important;
+    font-family: Poppins !important;
+    font-size: 1rem;
+    background-clip: padding-box;
+    border: 1px solid #e2e5ec;
+    border-radius: 4px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.RadAutoCompleteBox_MetroTouch .racToken {
+    font-family: Poppins !important;
+    font-size: 1rem;
+    border-radius: 4px;
+}
+
+.RadTreeView RadTreeView_Metro {
+    height: calc(1.5em + 1.3rem + 2px) !important;
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.rtIn {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.rddtPopup_Metro .rddtFilter .rddtFilterInput {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.RadDropDownTree_Metro .rddtInner {
+    height: calc(1.5em + 1.3rem + 2px) !important;
+}
+
+.RadDropDownTree .rddtFakeInput {
+    font-family: Poppins !important;
+    font-size: 1rem;
+    padding-top: 7px;
+    height: 25px !important;
+}
+
+.RadDropDownTree_Metro .rddtIcon {
+    background-position: -1px -14px !important;
+}
+
+.RadComboBox_Metro .rcbFocused .rcbReadOnly .rcbInput {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.RadComboBox_Metro .rcbHovered .rcbReadOnly .rcbInput {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.RadComboBox_Metro .rcbReadOnly .rcbInput {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.RadComboBoxDropDown .rcbItem, .RadComboBoxDropDown .rcbHovered, .RadComboBoxDropDown .rcbDisabled, .RadComboBoxDropDown .rcbLoading, .RadComboBoxDropDown .rcbCheckAllItems, .RadComboBoxDropDown .rcbCheckAllItemsHovered {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+div.RadComboBox_Default table .rcbInputCell,
+div.RadComboBox_Default table .rcbArrowCell {
+    height: calc(1.5em + 1.3rem + 2px) !important;
+    padding: 0;
+}
+
+div.RadComboBox_Default table .rcbInputCell input {
+    height: calc(1.5em + 1.3rem + 2px) !important;
+    font-family: Poppins !important;
+    font-size: 1rem;
+    padding: 0;
+}
+
+.rcbInput {
+    height: calc(1.5em + 1.3rem + 2px) !important;
+}
+
+.RadComboBox {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+
+.RadComboBox_Metro {
+    font-family: Poppins !important;
+    font-size: 1rem;
+}
+.RadDropDownTree .rddtFakeInput{
+    margin-top:7px !important;
+}
+
+.btn-icon {
+    cursor:pointer !important;
+}

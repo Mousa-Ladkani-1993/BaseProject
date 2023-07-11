@@ -1,0 +1,57 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<ul class="navbar-nav" style="margin-top: 8px;">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <div class="kt-header__topbar-item kt-header__topbar-item--user">
+            <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,0px">
+                <div class="kt-header__topbar-user text-primary">
+                    <i class="fa fa-2x fa-user-circle"></i>
+                    @*<img src='~/assets/images/user_profile_icon.png' id="imgProfilePic" />*@
+                </div>
+            </div>
+
+            <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-top-unround dropdown-menu-xl">
+                <div class="kt-notification">
+                    <a href="~/Users/ManageUserProfile" class="kt-notification__item">
+                        <div class="kt-notification__item-icon">
+                            <i class="fa fa-user"></i>
+                        </div>
+                        <div class="kt-notification__item-details">
+                            <div class="kt-notification__item-title kt-font-bold">
+                                My Profile
+                            </div>
+                            <div class="kt-notification__item-time">
+                                Account settings and more
+                            </div>
+                        </div>
+                    </a>
+
+                    <div class="kt-notification__custom kt-space-between">
+                        <form id="logoutForm" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+                            <button id="logout" type="submit" class="btn btn-bold btn-danger btn-sm">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    { 
+<li class="nav-item">
+    <div class="row">
+        <div class="col-6">
+            <a class="btn btn-primary" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </div>
+        <div class="col-6">
+            <a class="btn btn-primary" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </div>
+
+    </div>
+    
+</li> 
+    }
+</ul>

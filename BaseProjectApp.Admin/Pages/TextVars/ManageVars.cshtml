@@ -1,0 +1,290 @@
+﻿@page
+@model EDP.Admin.Pages.TextVars.ManageVarsModel
+
+@{
+    ViewData["Title"] = "Text Vars";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+} 
+
+<style>
+    .Pointer {
+        cursor: pointer !important;
+    }
+
+    .Disabledcursor {
+        cursor: not-allowed !important;
+        color: currentColor !important;
+        opacity: 0.5 !important;
+    }
+
+        .Disabledcursor.btn-clean:hover {
+            background-color: #5867dd !important;
+            color: currentColor !important;
+            opacity: 0.5 !important;
+        }
+
+
+    .IconActionAvtive {
+        color: white;
+        font-weight: bold;
+    }
+</style>
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon2-checking"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Text vars
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        @if (@Model._permObj.canAdd == true)
+                        {
+                            <a href="ManageVar?Id=0" class="btn btn-brand btn-elevate btn-icon-sm">
+                                <i class="la la-plus"></i>
+                                New Text Var
+                            </a>}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body">
+
+            <!--begin: Search Form -->
+            <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
+                <div class="row align-items-center">
+                    <div class="col-xl-12 order-2 order-xl-1">
+                        <div class="row align-items-center">
+                            <div class="col-3 kt-margin-b-20-tablet-and-mobile">
+                                <div class="kt-input-icon kt-input-icon--left">
+                                    <input type="text" class="form-control" placeholder="Search..." id="TextVarSearch" runat="server" clientidmode="Static" />
+                                    <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                        <span><i class="la la-search"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    @*<div class="col-xl-4 order-1 order-xl-2 kt-align-right" style="display: none;">
+                        <a href="ManageRecord.aspx?Id=0" class="btn btn-default kt-hidden">
+                            <i class="la la-plus"></i>New Text var
+                        </a>
+
+                        <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg d-xl-none"></div>
+                    </div>*@
+                </div>
+            </div>
+
+            <div class="kt-datatable" id="VarsDiv"></div>
+            <!--end: Search Form -->
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script>
+        var APIUrl = '@ViewData["APIURL"]';
+        var UserId = '@ViewData["UserId"]';
+
+        var VarsDT;
+        var KTDatatableTextVars = function () { 
+
+            var VarsObj = function () {
+
+            VarsDT = $('#VarsDiv').KTDatatable({ 
+
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: APIUrl + 'Api/TextVars/GetAll',
+                            method: 'Get',
+                        }
+                    }
+                }, 
+
+                layout: {
+                    scroll: false,  
+                    footer: false  
+                }, 
+
+                sortable: false,
+                   pagination: true,
+
+                search: {
+                    input: $('#TextVarSearch')
+                },
+                 
+                columns: [
+                    {
+                        field: 'Id',
+                        title: 'Id',
+                        sortable: false,
+                        type: 'number',
+                      width: 150,
+                        //textAlign: 'left',
+                    },
+                    {
+                        field: 'Name',
+                        title: 'Name',
+                         width: 150,
+                    }, 
+                    {
+                        field: 'Actions',
+                        title: 'Actions',
+                                  width: 150,   
+
+                        //autoHide: false,
+                        //overflow: 'visible',
+                        template: function (row) {
+                            let htmlStr = '';
+
+                            @if (@Model._permObj.canEdit == true)
+                            {
+                                <text>
+                                    htmlStr += `
+                                    <a href="ManageVar?id=${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md Pointer" title="Edit details">
+                                        <i class="la la-edit"></i>
+                                    </a>`;
+                                </text>
+                            }
+
+                            @if (@Model._permObj.canEdit == false && @Model._permObj.canView == true)
+                            {
+                                <text>
+                                    htmlStr += `
+                                    <a href="ManageVar?id=${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md Pointer" title="Show details">
+                                        <i class="la la-eye"></i>
+                                    </a>`;
+                                </text>
+                            }
+
+                            @*@if (@Model._permObj.canDelete== true)
+                            {
+                                <text>
+                                    htmlStr += `
+                                    <a data-row-id="${row.Id}" class="btn btn-sm btn-clean btn-icon btn-icon-md show-delete-data Pointer" title="Delete">
+                                        <i class="la la-trash"></i>
+                                    </a>`;
+                                </text>
+                            }*@
+
+
+                            return htmlStr;
+                        },
+                    }],
+                });
+            };
+
+            return {
+
+                // public functions
+                init: function () {
+                     VarsObj();
+
+                    $("#VarsDiv").on("click", ".show-delete-data", function (e) {
+                        Swal.fire({
+                            title: 'Alert',
+                            text: 'Are you sure you want to delete ?',
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Yes',
+                            cancelButtonText: 'No',
+
+                        }).then((result) => {
+                            if (result.value) {
+                                DeleteRecord($(this).data("row-id"))
+                            }
+                            else if (result.dismiss === Swal.DismissReason.cancel) {
+                                result = false;
+                            }
+                        })
+
+                    })
+
+
+
+                    $("#VarsDiv").on("click", ".kt-datatable__row", function (e) {
+
+                        var InnerTages = $("td span");
+                        var InnerTagesWithActions = $("td span a");
+                        var InnerTagesWithPriorityInd = $("td span a.PriorityInd");
+                        var InnerTagesWithActionsIcons = $("td span a i");
+
+                        if ($(this).hasClass('bg-primary')) {
+                            $(this).removeClass('bg-primary');
+                            $(this).find(InnerTages).removeClass('text-white');
+                            $(this).find(InnerTages).removeClass('font-weight-bold');
+                            //$(this).find(InnerTagesWithActions).removeClass('btn-label-light-o2');
+                            $(this).find(InnerTagesWithActionsIcons).removeClass('IconActionAvtive');
+                            $(this).find(InnerTagesWithPriorityInd).css('display', 'none');
+                        }
+                        else {
+
+                            let ActiveRow = $('.kt-datatable__row.bg-primary');
+
+                            if (ActiveRow) {
+                                ActiveRow.removeClass('bg-primary');
+                                ActiveRow.find(InnerTages).removeClass('text-white');
+                                ActiveRow.find(InnerTages).removeClass('font-weight-bold');
+                                //ActiveRow.find(InnerTagesWithActions).removeClass('btn-label-light-o2');
+                                ActiveRow.find(InnerTagesWithActionsIcons).removeClass('IconActionAvtive');
+                                ActiveRow.find(InnerTagesWithPriorityInd).css('display', 'none');
+
+                                $(this).addClass('bg-primary');
+                                $(this).find(InnerTages).addClass('text-white');
+                                $(this).find(InnerTages).addClass('font-weight-bold');
+                                //$(this).find(InnerTagesWithActions).addClass('btn-label-light-o2');
+                                $(this).find(InnerTagesWithActionsIcons).addClass('IconActionAvtive');
+                                $(this).find(InnerTagesWithPriorityInd).css('display', '');
+                            }
+
+
+                        }
+
+                    });
+                }
+            };
+        }();
+
+        jQuery(document).ready(function () {
+
+            KTDatatableTextVars.init();
+
+        });
+
+        function DeleteRecord(recordId) {
+            
+            $.ajax({
+                type: "POST",
+                url: APIUrl + "Api/TextVars/Delete?Id=" + recordId,
+                dataType: "text",
+                success: function (data) {
+                    AlertSwalSucceeded('Deleted Successfully');
+                    VarsDT.reload();
+                },
+                error: function (request, status, error) {
+                    AlertSwalError("Error", request.responseText)
+                }
+            });
+
+        }
+
+
+
+
+    </script>
+
+}

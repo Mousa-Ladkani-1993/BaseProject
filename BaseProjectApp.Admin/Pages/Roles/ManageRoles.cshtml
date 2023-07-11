@@ -1,0 +1,313 @@
+﻿@page
+@model BaseProjectApp.Admin.Pages.Roles.ManageRolesModel
+
+@{
+    ViewData["Title"] = "Manage Roles";
+    Layout = "~/Pages/Shared/_Layout.cshtml";
+}
+
+<style>
+
+    .ui-autocomplete {
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: default;
+        z-index: 9050 !important;
+    }
+</style>
+
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="kt-portlet kt-portlet--mobile">
+        <div class="kt-portlet__head kt-portlet__head--lg">
+            <div class="kt-portlet__head-label">
+                <span class="kt-portlet__head-icon">
+                    <i class="kt-font-brand flaticon-list"></i>
+                </span>
+                <h3 class="kt-portlet__head-title">
+                    Roles
+                </h3>
+            </div>
+            <div class="kt-portlet__head-toolbar">
+                <div class="kt-portlet__head-wrapper">
+                    <div class="kt-portlet__head-actions">
+                        <a href="#" class="btn btn-brand btn-elevate btn-icon-sm" onclick="ClearControls()" data-toggle="modal" data-target="#editor-modal">
+                            <i class="la la-plus"></i>
+                            New
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="kt-portlet__body"> 
+            <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
+                <div class="row align-items-center">
+                    <div class="col-xl-8 order-2 order-xl-1">
+                        <div class="row align-items-center">
+                            <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                <div class="kt-input-icon kt-input-icon--left">
+                                    <input type="text" class="form-control" placeholder="Search..." id="RolesSearch" runat="server" clientidmode="Static" />
+                                    <span class="kt-input-icon__icon kt-input-icon__icon--left">
+                                        <span><i class="la la-search"></i></span>
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-xl-4 order-1 order-xl-2 kt-align-right" style="display: none;">
+                        <a href="#" class="btn btn-default kt-hidden">
+                            <i class="la la-plus"></i>New
+                        </a>
+
+                        <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg d-xl-none"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="RolesDiv"></div> 
+        </div>
+    </div>
+      
+    <div class="modal fade" id="editor-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">New Category</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="editor-form">
+                        <div class="form-group row" style="display: none">
+                            <label class="col-lg-3 col-form-label">Id</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="txtId" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Name</label>
+                            <div class="col-lg-8">
+                                <input type="text" autocomplete="off" id="txtName" maxlength="256" class="form-control" />
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Code</label>
+                            <div class="col-lg-8">
+                                <input class="form-control InputNum" autocomplete="off" maxlength="3" id="txtCode" />
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Section</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" maxlength="256" id="txtSection" />
+                            </div>
+                        </div>
+                    
+                         <div class="form-group row">
+                            <label class="col-lg-3 col-form-label">Icon class</label>
+                            <div class="col-lg-8">
+                                <input class="form-control" maxlength="500" id="txtClass" />
+                            </div>
+                        </div>
+ 
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="return onsubmitForm()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+
+
+
+<script> 
+
+     var Sections = @Html.Raw(Model.SectionsObj); 
+     var Classes = @Html.Raw(Model.ClassesObj); 
+     
+    $( function() { 
+
+
+      $("#txtSection").autocomplete({
+        source: Sections
+      });
+
+      $("#txtClass").autocomplete({
+        source: Classes
+      }); 
+
+    } );
+</script>
+
+<script>
+    var APIUrl = '@ViewData["APIURL"]';
+    var UserId = '@ViewData["UserId"]';
+
+
+    var RolesDT;
+    var RolesDataTable = function () { 
+        var RolesDataTableObj = function () {
+            RolesDT = $('#RolesDiv').KTDatatable({ 
+                data: {
+                    type: 'remote',
+                    source: {
+                        read: {
+                            url: APIUrl + 'Api/Roles/All',
+                            method: 'Get',
+                        }
+                    }
+                }, 
+                layout: {
+                    scroll: false, 
+                    footer: false  
+                }, 
+                sortable: true, 
+                pagination: true, 
+                search: {
+                    input: $('#RolesSearch')
+                }, 
+                columns: [
+                    {
+                        field: 'Id',
+                        title: 'Id',
+                        sortable: false,
+                    }, {
+                        field: 'Name',
+                        title: 'Role Name',
+                    },
+                    {
+                        field: 'Actions',
+                        title: 'Actions',
+                        sortable: false,
+                        width: 110,
+                        autoHide: false,
+                        overflow: 'visible',
+                        template: function (row) {
+                            return '\
+                                    <a data-row-id='+ row.Id + ' class="btn btn-sm btn-clean btn-icon btn-icon-md show-delete-data" title="Delete">\
+                                        <i class="la la-trash"></i>\
+                                    </a>\
+                                ';
+                        },
+                    }],
+            });
+        };
+
+        return { 
+            init: function () {
+                RolesDataTableObj();
+            }
+        };
+    }();
+
+    jQuery(document).ready(function () {
+        RolesDataTable.init();
+        $("#RolesDiv").on("click", ".show-delete-data", function (e) {
+            Swal.fire({
+                title: 'Alert',
+                text: 'Are you sure you want to delete ?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No',
+
+            }).then((result) => {
+                if (result.value) {
+                    DeleteRecord($(this).data("row-id"))
+                }
+                else if (result.dismiss === Swal.DismissReason.cancel) {
+                    result = false;
+                }
+            })
+
+        })
+
+    });
+
+    function onsubmitForm() {
+        var $modal = $('#editor-modal');
+
+        var Id;
+        if (document.getElementById('txtId').value == "")
+            Id = 0;
+        else
+            Id = document.getElementById('txtId').value;
+          
+        const RoleName = $('#txtName').val();
+        const RoleCode = $('#txtCode').val();
+        const CssClass = $('#txtClass').val();
+        const Section = $('#txtSection').val();
+         
+                if(RoleName == '')
+                { 
+                    AlertSwalError("Error", "Role name is missing..")
+                    return;
+                }
+
+        let obj = new Object(); 
+        obj.name = RoleName;
+        obj.Code = RoleCode;
+        obj.Section = Section;
+        obj.IconClass = CssClass;
+         
+        let url = APIUrl + 'Api/Roles'; 
+
+        $.ajax({
+            type: "Put",
+            url: url,
+            data: JSON.stringify(obj),
+            contentType: "application/json",
+            success: function (msg) {
+                RolesDT.reload()
+                $modal.modal('hide');
+            },
+            error: function (request, status, error) {
+                     AlertSwalError("Error",  request.responseText)
+            }
+        });
+
+        return false;
+    }
+
+    function DeleteRecord(recordId) {
+        $.ajax({
+            type: "Delete",
+            url: APIUrl + "Api/Roles?Id=" + recordId,
+            dataType: "text",
+            success: function (data) {
+                AlertSwalSucceeded('Deleted Successfully');
+                RolesDT.reload();
+            },
+            error: function (request, status, error) {
+                AlertSwalError("Error", request.responseText)
+            }
+        });
+
+    }
+
+    function ClearControls() {
+
+            $('#txtId').val("0");
+            $('#txtName').val(""); 
+            $('#txtCode').val("");
+            $('#txtClass').val("");
+            $('#txtSection').val("");
+
+    }
+
+</script>
+
+}

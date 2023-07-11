@@ -1,0 +1,70 @@
+﻿@* Generic Rules *@
+    @* all functions are async *@
+    @* functions must catch exceptions *@
+    @* functions names must be in camel case and end with "_api" *@
+
+@* GET Rules: *@
+    @* in sucess case return response data.  *@
+    @* in failure case return null.  *@
+
+@* POST and DELETE Rules: *@
+    @* in sucess case return true. *@
+    @* in failure case false.  *@
+
+
+
+
+@* keywords api *@
+<script>
+
+    async function getRecordKeywords_api(recordId) {
+        try {
+            const data = await $.ajax({
+                method: 'GET',
+                url: `${__apiUrl}Api/Keywords/RecordKeywords?recordId=${recordId}`,
+            });
+
+            return data;
+        }
+        catch(e) {
+            console.log(e);
+            return null;
+        }
+    }
+    async function getProjectKeywords_api(projectId) {
+        try {
+            const data = await $.ajax({
+                method: 'GET',
+                url: `${__apiUrl}Api/Keywords/ProjectKeywords?projectId=${projectId}`,
+            });
+
+            return data;
+        }
+        catch(e) {
+            console.log(e);
+            return null;
+        }
+    }
+
+</script>
+
+
+@* users api *@
+<script>
+
+    async function getUserPermissions_api(userId) {
+        try {
+            const data = await $.ajax({
+                method: 'GET',
+                url: `${__apiUrl}Api/Users/UserPermissions?userId=${userId}`,
+            });
+
+            return data;
+        }
+        catch(e) {
+            console.log(e);
+            return null;
+        }
+    }
+
+</script>
